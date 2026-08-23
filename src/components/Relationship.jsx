@@ -140,7 +140,7 @@ export default function Relationship({ nightMode }) {
         </span>
       </h2>
       <div className="container-fluid py-4">
-        <div className="row flex-nowrap justify-content-center align-items-end relationship-row-scroll">
+        <div className="row flex-nowrap justify-content-center align-items-center relationship-row-scroll">
           {/* Rith */}
           <div
             className="col-12 col-md-4 d-flex flex-column align-items-center px-3 py-3"
@@ -223,9 +223,9 @@ export default function Relationship({ nightMode }) {
                   <div
                     className="text-center"
                     style={{
-                      minWidth: 48,
-                      padding: "6px 4px",
-                      borderRadius: 12,
+                      minWidth: 36,
+                      padding: "4px 3px",
+                      borderRadius: 8,
                       background: nightMode
                         ? "rgba(127, 83, 255, 0.15)"
                         : "rgba(255, 105, 180, 0.1)",
@@ -237,11 +237,11 @@ export default function Relationship({ nightMode }) {
                     <div
                       style={{
                         fontFamily: "'Poppins', 'Montserrat', sans-serif",
-                        fontSize: "1.3rem",
+                        fontSize: "0.95rem",
                         fontWeight: 800,
                         color: nightMode ? "#e8deff" : "#5a2d4a",
                         lineHeight: 1.1,
-                        letterSpacing: "0.5px",
+                        letterSpacing: "0.3px",
                       }}
                     >
                       {unit.pad ? String(unit.value).padStart(2, "0") : unit.value}
@@ -249,10 +249,10 @@ export default function Relationship({ nightMode }) {
                     <div
                       style={{
                         fontFamily: "'Poppins', sans-serif",
-                        fontSize: "0.55rem",
+                        fontSize: "0.45rem",
                         fontWeight: 600,
                         color: heartColor,
-                        letterSpacing: "1px",
+                        letterSpacing: "0.8px",
                         textTransform: "uppercase",
                         marginTop: 1,
                       }}
@@ -263,7 +263,7 @@ export default function Relationship({ nightMode }) {
                   {idx < 3 && (
                     <span
                       style={{
-                        fontSize: "1rem",
+                        fontSize: "0.75rem",
                         fontWeight: 800,
                         color: nightMode ? "#7f53ff55" : "#ffb3d655",
                         margin: "0 1px",
