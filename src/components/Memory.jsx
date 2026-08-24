@@ -13,6 +13,7 @@ const memories = [
   { id: 8, title: "Road Trip", image: "../assets/images/8.jpg" },
   { id: 9, title: "Concert", image: "../assets/images/9.jpg" },
   { id: 10, title: "Concert", image: "../assets/images/10.jpg" },
+  { id: 11, title: "Concert", image: "../assets/images/11.jpg" },
 ];
 
 // ---- MAIN COMPONENT ----

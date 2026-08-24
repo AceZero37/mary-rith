@@ -8,6 +8,7 @@ const videos = [
   { id: 3, title: "Our Adventure", src: "../assets/video/3.mp4" },
   { id: 4, title: "Love Story", src: "../assets/video/4.mp4" },
   { id: 5, title: "Precious Time", src: "../assets/video/5.mp4" },
+  { id: 6, title: "Dancing Time", src: "../assets/video/6.mp4" },
 ];
 
 // ---- MAIN COMPONENT ----
@@ -49,7 +50,7 @@ const Video = ({ nightMode }) => {
   useEffect(() => {
     if (viewerIdx !== null && videoRef.current) {
       videoRef.current.load();
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     }
   }, [viewerIdx]);
 
