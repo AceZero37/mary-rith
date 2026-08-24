@@ -75,8 +75,17 @@ const letters = [
 ];
 
 // ---- Floating Hearts Background ----
-function FloatingHearts({ color }) {
-  const hearts = ["💕", "✨", "💖", "🌸", "💫", "❤️"];
+const floatingHeartItems = Array.from({ length: 12 }).map((_, i) => ({
+  left: `${(i * 19 + 7) % 94}%`,
+  top: `${(i * 23 + 12) % 85}%`,
+  fontSize: `${0.85 + (i % 3) * 0.25}rem`,
+  opacity: 0.12 + (i % 4) * 0.04,
+  duration: `${4 + (i % 3) * 1.5}s`,
+  delay: `${(i * 0.4) % 3}s`,
+  emoji: ["💕", "✨", "💖", "🌸", "💫", "❤️"][i % 6],
+}));
+
+function FloatingHearts() {
   return (
     <div
       style={{
@@ -87,20 +96,20 @@ function FloatingHearts({ color }) {
         zIndex: 0,
       }}
     >
-      {[...Array(12)].map((_, i) => (
+      {floatingHeartItems.map((item, i) => (
         <div
           key={i}
           style={{
             position: "absolute",
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            fontSize: `${0.7 + Math.random() * 1}rem`,
-            opacity: 0.08 + Math.random() * 0.12,
-            animation: `floatUp ${3 + Math.random() * 4}s ease-in-out infinite`,
-            animationDelay: `${Math.random() * 4}s`,
+            left: item.left,
+            top: item.top,
+            fontSize: item.fontSize,
+            opacity: item.opacity,
+            animation: `floatUp ${item.duration} ease-in-out infinite`,
+            animationDelay: item.delay,
           }}
         >
-          {hearts[i % hearts.length]}
+          {item.emoji}
         </div>
       ))}
     </div>

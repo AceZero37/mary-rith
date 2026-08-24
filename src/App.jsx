@@ -2,22 +2,10 @@ import { useEffect, useState } from "react";
 import Content from "@/components/Content";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import LoveFloatingReact from "@/components/LoveFloatingReact";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "aos/dist/aos.css";
 import AOS from "aos";
-
-// Custom hook to detect desktop/tablet
-function useIsDesktopOrTablet() {
-  const [isWide, setIsWide] = useState(
-    typeof window !== "undefined" ? window.innerWidth >= 768 : true
-  );
-  useEffect(() => {
-    const handleResize = () => setIsWide(window.innerWidth >= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-  return isWide;
-}
 
 // Starfield for galaxy mode
 function randomStarStyle() {
@@ -66,7 +54,6 @@ function App() {
     return () => window.removeEventListener("wheel", handleWheel);
   }, []);
 
-  const isDesktopOrTablet = useIsDesktopOrTablet();
   const [nightMode, setNightMode] = useState(false);
 
   // Add class for mode to root container
@@ -75,23 +62,23 @@ function App() {
   // Remove inline background styles — use CSS classes instead
   const bgClass = nightMode ? "bg-night" : "bg-light";
 
-  // Animated icons by mode - Updated light mode with nature/crystal theme
+  // Ambient floating icons — light = pink bokeh, night = cosmic
   const heartSet = nightMode
     ? [
         { icon: "💜", cls: "h1" },
-        { icon: "💙", cls: "h2" },
+        { icon: "✨", cls: "h2" },
         { icon: "💫", cls: "h3" },
         { icon: "🌌", cls: "h4" },
         { icon: "💖", cls: "h5" },
         { icon: "🌠", cls: "h6" },
       ]
     : [
-        { icon: "🌿", cls: "h1" },
-        { icon: "💎", cls: "h2" },
-        { icon: "🍃", cls: "h3" },
-        { icon: "✨", cls: "h4" },
-        { icon: "🌱", cls: "h5" },
-        { icon: "💚", cls: "h6" },
+        { icon: "💕", cls: "h1" },
+        { icon: "🌸", cls: "h2" },
+        { icon: "✨", cls: "h3" },
+        { icon: "💖", cls: "h4" },
+        { icon: "🌷", cls: "h5" },
+        { icon: "💗", cls: "h6" },
       ];
 
   return (
@@ -130,17 +117,17 @@ function App() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div style={{ position: "relative", zIndex: 2, paddingTop: 16 }}>
-        {/* Sticky Header with toggle props */}
-        <div
-          className="sticky-top"
-          style={{ zIndex: 100, background: "transparent" }}
-        >
-          <Header nightMode={nightMode} setNightMode={setNightMode} />
+      <div style={{ position: "relative", zIndex: 2 }}>
+        {/* Sticky Header */}
+        <Header nightMode={nightMode} setNightMode={setNightMode} />
+        <div style={{ paddingTop: 8 }}>
+          <Content nightMode={nightMode} />
+          <Footer nightMode={nightMode} />
         </div>
-        <Content nightMode={nightMode} />
-        <Footer nightMode={nightMode} />
       </div>
+
+      {/* Floating Love Reaction FAB */}
+      <LoveFloatingReact nightMode={nightMode} />
     </div>
   );
 }
