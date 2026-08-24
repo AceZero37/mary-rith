@@ -1,14 +1,63 @@
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import AOS from "aos";
 
 // ---- DATA ----
 const videos = [
-  { id: 1, title: "Sweet Moments", src: "../assets/video/1.mp4" },
-  { id: 2, title: "Together Forever", src: "../assets/video/2.mp4" },
-  { id: 3, title: "Our Adventure", src: "../assets/video/3.mp4" },
-  { id: 4, title: "Love Story", src: "../assets/video/4.mp4" },
-  { id: 5, title: "Precious Time", src: "../assets/video/5.mp4" },
-  { id: 6, title: "Dancing Time", src: "../assets/video/6.mp4" },
+  {
+    id: 1,
+    title: "Sweet Moments",
+    subtitle: "Every smile with you is priceless 💕",
+    emoji: "🌸",
+    src: "../assets/video/1.mp4",
+    tag: "Romantic",
+    tagColor: "#ff69b4",
+  },
+  {
+    id: 2,
+    title: "Together Forever",
+    subtitle: "Side by side, always and always ✨",
+    emoji: "💑",
+    src: "../assets/video/2.mp4",
+    tag: "Memories",
+    tagColor: "#a77dfd",
+  },
+  {
+    id: 3,
+    title: "Our Adventure",
+    subtitle: "The road is better with you 🚗",
+    emoji: "🌍",
+    src: "../assets/video/3.mp4",
+    tag: "Adventures",
+    tagColor: "#ffd700",
+  },
+  {
+    id: 4,
+    title: "Love Story",
+    subtitle: "Our chapter is my favorite story 📖",
+    emoji: "❤️",
+    src: "../assets/video/4.mp4",
+    tag: "Romantic",
+    tagColor: "#ff4b72",
+  },
+  {
+    id: 5,
+    title: "Precious Time",
+    subtitle: "Time flies when I'm holding your hand ⏰",
+    emoji: "💖",
+    src: "../assets/video/5.mp4",
+    tag: "Cozy",
+    tagColor: "#00b894",
+  },
+  {
+    id: 6,
+    title: "Dancing Time",
+    subtitle: "Dancing like nobody's watching, just us 🎶",
+    emoji: "💃",
+    src: "../assets/video/6.mp4",
+    tag: "Fun",
+    tagColor: "#74b9ff",
+  },
 ];
 
 // ---- MAIN COMPONENT ----
@@ -18,17 +67,23 @@ const Video = ({ nightMode }) => {
   }, []);
 
   const [viewerIdx, setViewerIdx] = useState(null);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
+  const hoverVideoRefs = useRef({});
 
-  // Prevent background scroll when modal open
+  // Lock body scroll when modal open
   useEffect(() => {
     if (viewerIdx !== null) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [viewerIdx]);
 
@@ -50,366 +105,532 @@ const Video = ({ nightMode }) => {
   useEffect(() => {
     if (viewerIdx !== null && videoRef.current) {
       videoRef.current.load();
-      videoRef.current.play().catch(() => { });
+      videoRef.current.play().catch(() => {});
+      setIsPlaying(true);
     }
   }, [viewerIdx]);
 
-  const accentColor = nightMode ? "#b993ff" : "#ff69b4";
+  // Auto-preview on card hover
+  const handleCardMouseEnter = (idx) => {
+    setHoveredIdx(idx);
+    const vRef = hoverVideoRefs.current[idx];
+    if (vRef) {
+      vRef.currentTime = 0;
+      vRef.play().catch(() => {});
+    }
+  };
+
+  const handleCardMouseLeave = (idx) => {
+    setHoveredIdx(null);
+    const vRef = hoverVideoRefs.current[idx];
+    if (vRef) {
+      vRef.pause();
+      vRef.currentTime = 0;
+    }
+  };
+
+  // Theme
+  const accent = nightMode ? "#cfaeff" : "#ff69b4";
+  const sectionBg = nightMode
+    ? "linear-gradient(180deg, rgba(20,12,45,0) 0%, rgba(40,25,80,0.15) 100%)"
+    : "linear-gradient(180deg, rgba(255,230,245,0) 0%, rgba(255,210,235,0.12) 100%)";
   const cardBg = nightMode
-    ? "rgba(40, 30, 70, 0.7)"
-    : "rgba(255,255,255,0.69)";
-  const cardBorder = nightMode ? "1.5px solid #7f53ff44" : "1.5px solid #ffe1ef";
-  const cardShadow = nightMode
-    ? "0 8px 30px #7f53ff25, 0 1.5px 10px #0002"
-    : "0 8px 30px #ffb3d625, 0 1.5px 10px #fff2";
-  const cardHoverShadow = nightMode
-    ? "0 16px 42px #7f53ff40, 0 3px 16px #0004"
-    : "0 16px 42px #ffd6e480, 0 3px 16px #fff4";
-  const overlayBg = nightMode
-    ? "rgba(20, 15, 40, 0.96)"
-    : "rgba(255, 234, 246, 0.96)";
-  const dotActive = nightMode ? "#b993ff" : "#ff69b4";
-  const dotInactive = nightMode ? "#2d1f4e" : "#fff6fa";
-  const dotBorder = nightMode ? "#7f53ff" : "#ffb3d6";
-  const dotShadow = nightMode ? "0 2px 10px #7f53ff80" : "0 2px 10px #ffb3d680";
-  const navBtnBg = nightMode
-    ? "rgba(40,30,70,0.85)"
-    : "rgba(255,255,255,0.85)";
-  const navBtnBorder = nightMode ? "1.5px solid #7f53ff44" : "1.5px solid #ffe6ef";
-  const navBtnShadow = nightMode
-    ? "0 2px 10px #7f53ff88"
-    : "0 2px 10px #ffb3d688";
+    ? "rgba(32, 18, 60, 0.82)"
+    : "rgba(255,255,255,0.88)";
+  const cardBorder = nightMode
+    ? "1.5px solid rgba(167,125,253,0.25)"
+    : "1.5px solid rgba(255,182,218,0.45)";
+  const textColor = nightMode ? "#e8deff" : "#332233";
+  const subText = nightMode ? "#bca6e8" : "#9b6882";
+  const overlayBg = "rgba(0,0,0,0.93)";
 
   return (
-    <div className="container pb-3">
-      {/* Centered Title */}
-      <div className="text-center mb-3" style={{ marginTop: 26 }}>
-        <span
-          style={{
-            fontFamily: "'Poppins', 'Montserrat', cursive, sans-serif",
-            fontWeight: 800,
-            fontSize: "1.18rem",
-            letterSpacing: "1.1px",
-            color: accentColor,
-            textShadow: nightMode
-              ? "0 2px 10px #7f53ff33"
-              : "0 2px 10px #ff69b420",
-            filter: nightMode
-              ? "drop-shadow(0 2px 10px #b993ff22)"
-              : "drop-shadow(0 2px 10px #fff3)",
-            opacity: 0.95,
-          }}
-        >
-          <span
-            role="img"
-            aria-label="video"
-            style={{ fontSize: 19, marginRight: 6 }}
+    <div
+      className="pb-4"
+      style={{ background: sectionBg }}
+      data-aos="fade-up"
+    >
+      <div className="container px-2">
+        {/* ---- Section Header ---- */}
+        <div className="text-center mb-4" style={{ marginTop: 28 }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              fontFamily: "'Poppins', 'Montserrat', sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(1.1rem, 3.5vw, 1.35rem)",
+              letterSpacing: "1px",
+              color: accent,
+              textShadow: nightMode
+                ? "0 2px 14px rgba(127,83,255,0.45)"
+                : "0 2px 10px rgba(255,105,180,0.3)",
+            }}
           >
-            🎬
-          </span>
-          Our Videos
-          <span
-            role="img"
-            aria-label="video"
-            style={{ fontSize: 19, marginLeft: 6 }}
+            <span style={{ fontSize: "1.4rem" }}>🎬</span>
+            Our Video Memories
+            <span style={{ fontSize: "1.4rem" }}>🎬</span>
+          </div>
+          <div
+            style={{
+              fontFamily: "'Caveat', cursive",
+              fontSize: "clamp(1rem, 2.8vw, 1.18rem)",
+              color: nightMode ? "#d6ccff" : "#b0406a",
+              marginTop: 4,
+              opacity: 0.85,
+            }}
           >
-            🎬
-          </span>
-        </span>
+            ✨ Hover to preview • Tap to play full screen 💕
+          </div>
+        </div>
+
+        {/* ---- Glassmorphism Video Grid ---- */}
+        <div className="row g-3 justify-content-center">
+          {videos.map((video, idx) => {
+            const isHovered = hoveredIdx === idx;
+            return (
+              <div
+                key={video.id}
+                className="col-6 col-md-4 col-lg-4"
+                data-aos="fade-up"
+                data-aos-delay={idx * 70}
+              >
+                <div
+                  className="video-reel-card position-relative overflow-hidden"
+                  style={{
+                    borderRadius: 22,
+                    background: cardBg,
+                    border: isHovered
+                      ? nightMode
+                        ? "1.5px solid rgba(167,125,253,0.65)"
+                        : "1.5px solid rgba(255,105,180,0.65)"
+                      : cardBorder,
+                    boxShadow: isHovered
+                      ? nightMode
+                        ? "0 16px 44px rgba(127,83,255,0.4), 0 4px 14px rgba(0,0,0,0.3)"
+                        : "0 16px 44px rgba(255,105,180,0.35), 0 4px 14px rgba(0,0,0,0.1)"
+                      : nightMode
+                      ? "0 6px 24px rgba(127,83,255,0.18)"
+                      : "0 6px 24px rgba(255,105,180,0.14)",
+                    cursor: "pointer",
+                    transition: "transform 0.28s ease, box-shadow 0.28s ease, border 0.2s ease",
+                    transform: isHovered ? "translateY(-7px) scale(1.025)" : "none",
+                    backdropFilter: "blur(12px)",
+                  }}
+                  onMouseEnter={() => handleCardMouseEnter(idx)}
+                  onMouseLeave={() => handleCardMouseLeave(idx)}
+                  onClick={() => setViewerIdx(idx)}
+                >
+                  {/* Video Thumbnail / Preview */}
+                  <div
+                    className="position-relative overflow-hidden"
+                    style={{
+                      height: "clamp(130px, 30vw, 200px)",
+                      background: "#111",
+                    }}
+                  >
+                    <video
+                      ref={(el) => (hoverVideoRefs.current[idx] = el)}
+                      src={video.src}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        transition: "transform 0.35s ease",
+                        transform: isHovered ? "scale(1.06)" : "scale(1)",
+                      }}
+                      onLoadedData={(e) => {
+                        e.target.currentTime = 0.5;
+                      }}
+                    />
+
+                    {/* Dark overlay */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: isHovered
+                          ? "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)"
+                          : "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.6) 100%)",
+                        transition: "background 0.3s ease",
+                      }}
+                    />
+
+                    {/* Tag Pill (top-left) */}
+                    <div
+                      className="position-absolute top-0 start-0 m-2 px-2 py-0.5 rounded-pill"
+                      style={{
+                        background: video.tagColor + "dd",
+                        color: "#fff",
+                        fontSize: "clamp(0.5rem, 1.3vw, 0.65rem)",
+                        fontWeight: 700,
+                        fontFamily: "'Poppins', sans-serif",
+                        backdropFilter: "blur(4px)",
+                        letterSpacing: "0.3px",
+                      }}
+                    >
+                      {video.tag}
+                    </div>
+
+                    {/* Duration / Reel indicator (top-right) */}
+                    <div
+                      className="position-absolute top-0 end-0 m-2 d-flex align-items-center gap-1"
+                      style={{
+                        background: "rgba(0,0,0,0.55)",
+                        borderRadius: 20,
+                        padding: "2px 8px",
+                        backdropFilter: "blur(4px)",
+                      }}
+                    >
+                      <span style={{ fontSize: "0.7rem" }}>▶</span>
+                      <span
+                        style={{
+                          color: "#fff",
+                          fontSize: "clamp(0.5rem, 1.3vw, 0.6rem)",
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Reel
+                      </span>
+                    </div>
+
+                    {/* Center Play Button */}
+                    <div
+                      className="position-absolute top-50 start-50 translate-middle"
+                      style={{
+                        width: "clamp(42px, 10vw, 54px)",
+                        height: "clamp(42px, 10vw, 54px)",
+                        borderRadius: "50%",
+                        background: isHovered
+                          ? video.tagColor + "ee"
+                          : "rgba(255,255,255,0.88)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: isHovered
+                          ? `0 4px 20px ${video.tagColor}88`
+                          : "0 4px 18px rgba(0,0,0,0.35)",
+                        transition: "all 0.25s ease",
+                        transform: isHovered ? "scale(1.12)" : "scale(1)",
+                      }}
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill={isHovered ? "#fff" : video.tagColor}
+                        style={{ marginLeft: 2 }}
+                      >
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
+                    </div>
+
+                    {/* Emoji Stamp bottom-right */}
+                    <div
+                      className="position-absolute"
+                      style={{
+                        bottom: 8,
+                        right: 10,
+                        fontSize: "clamp(1rem, 3vw, 1.4rem)",
+                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
+                        transition: "transform 0.25s ease",
+                        transform: isHovered ? "scale(1.3) rotate(8deg)" : "scale(1)",
+                      }}
+                    >
+                      {video.emoji}
+                    </div>
+                  </div>
+
+                  {/* Card Footer Info */}
+                  <div className="p-2 px-2.5">
+                    <div
+                      style={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 700,
+                        fontSize: "clamp(0.74rem, 2vw, 0.88rem)",
+                        color: textColor,
+                        lineHeight: 1.15,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {video.title}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "'Caveat', cursive",
+                        fontSize: "clamp(0.8rem, 2.1vw, 0.95rem)",
+                        color: subText,
+                        lineHeight: 1.2,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        marginTop: 1,
+                      }}
+                    >
+                      {video.subtitle}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* ---- Grid ---- */}
-      <div className="container pb-5">
-        <div className="row g-4">
-          {videos.map((video, idx) => (
+      {/* ---- Fullscreen Video Player Modal (Portal to body) ---- */}
+      {viewerIdx !== null &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              width: "100vw",
+              height: "100dvh",
+              zIndex: 999999,
+              background: overlayBg,
+              backdropFilter: "blur(18px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              animation: "videoFadeIn 0.25s ease",
+              overflow: "hidden",
+            }}
+            onClick={() => setViewerIdx(null)}
+          >
+            {/* Player Container */}
             <div
-              key={video.id}
-              className="col-6 col-md-4 col-lg-4"
-              data-aos="fade-up"
-              data-aos-delay={idx * 80}
-              style={{ cursor: "pointer" }}
-              onClick={() => setViewerIdx(idx)}
+              style={{
+                width: "100%",
+                maxWidth: 500,
+                padding: "12px 16px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 16,
+                position: "relative",
+              }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <div
-                className="video-card-polaroid"
+              {/* Close Button */}
+              <button
+                onClick={() => setViewerIdx(null)}
+                aria-label="Close"
                 style={{
-                  borderRadius: "20px",
-                  overflow: "hidden",
-                  background: cardBg,
-                  boxShadow: cardShadow,
-                  border: cardBorder,
-                  transition: "transform 0.16s, box-shadow 0.22s",
-                  height: 200,
+                  position: "absolute",
+                  top: 0,
+                  right: 16,
+                  width: 38,
+                  height: 38,
+                  borderRadius: "50%",
+                  border: "2px solid rgba(255,255,255,0.3)",
+                  background: "rgba(255,255,255,0.15)",
+                  color: "#fff",
+                  fontSize: "1.1rem",
+                  cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  position: "relative",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform =
-                    "translateY(-6px) scale(1.038)";
-                  e.currentTarget.style.boxShadow = cardHoverShadow;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "none";
-                  e.currentTarget.style.boxShadow = cardShadow;
+                  backdropFilter: "blur(6px)",
+                  zIndex: 10,
                 }}
               >
-                {/* Video thumbnail (first frame) */}
-                <video
-                  src={video.src}
-                  muted
-                  preload="metadata"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    borderRadius: "16px",
-                    transition: "filter 0.14s",
-                  }}
-                  onLoadedData={(e) => {
-                    // Seek to 0.5s for a better thumbnail
-                    e.target.currentTime = 0.5;
-                  }}
-                />
+                ✕
+              </button>
 
-                {/* Play button overlay */}
+              {/* Video Header */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 2,
+                  width: "100%",
+                  paddingTop: 8,
+                }}
+              >
                 <div
                   style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "flex",
+                    display: "inline-flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(0,0,0,0.18)",
-                    borderRadius: "16px",
-                    transition: "background 0.2s",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: "50%",
-                      background: nightMode
-                        ? "rgba(127, 83, 255, 0.85)"
-                        : "rgba(255, 105, 180, 0.85)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: nightMode
-                        ? "0 4px 20px #7f53ff66"
-                        : "0 4px 20px #ff69b466",
-                      transition: "transform 0.2s, box-shadow 0.2s",
-                    }}
-                  >
-                    <svg
-                      width="22"
-                      height="22"
-                      viewBox="0 0 24 24"
-                      fill="white"
-                      style={{ marginLeft: 2 }}
-                    >
-                      <polygon points="5,3 19,12 5,21" />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Video title label */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    padding: "8px 12px",
-                    background: nightMode
-                      ? "linear-gradient(0deg, rgba(20,15,40,0.85) 60%, transparent 100%)"
-                      : "linear-gradient(0deg, rgba(255,255,255,0.85) 60%, transparent 100%)",
-                    borderRadius: "0 0 16px 16px",
-                    zIndex: 2,
+                    gap: 8,
                   }}
                 >
                   <span
                     style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      fontFamily:
-                        "'Poppins', 'Montserrat', sans-serif",
-                      color: nightMode ? "#d6ccff" : "#a8235d",
-                      letterSpacing: "0.3px",
+                      background: videos[viewerIdx].tagColor + "cc",
+                      color: "#fff",
+                      fontSize: "0.7rem",
+                      fontWeight: 700,
+                      fontFamily: "'Poppins', sans-serif",
+                      borderRadius: 20,
+                      padding: "2px 10px",
                     }}
                   >
-                    {video.title}
+                    {videos[viewerIdx].tag}
+                  </span>
+                  <span style={{ fontSize: "1.3rem" }}>
+                    {videos[viewerIdx].emoji}
                   </span>
                 </div>
+                <div
+                  style={{
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: 800,
+                    fontSize: "clamp(1rem, 3.5vw, 1.3rem)",
+                    color: "#fff",
+                    textShadow: "0 2px 10px rgba(0,0,0,0.6)",
+                    textAlign: "center",
+                  }}
+                >
+                  {videos[viewerIdx].title}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'Caveat', cursive",
+                    fontSize: "clamp(0.95rem, 2.5vw, 1.12rem)",
+                    color: "rgba(255,220,240,0.9)",
+                    textAlign: "center",
+                  }}
+                >
+                  {videos[viewerIdx].subtitle}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* ---- Modal/Viewer ---- */}
-      {viewerIdx !== null && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{
-            background: overlayBg,
-            backdropFilter: "blur(5px) saturate(1.2)",
-            zIndex: 2000,
-          }}
-          onClick={() => setViewerIdx(null)}
-        >
-          <div
-            className="d-flex flex-column align-items-center justify-content-center w-100 position-relative"
-            style={{ maxWidth: 500, margin: "0 auto" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close */}
-            <button
-              className="btn-close position-absolute top-0 end-0 m-4"
-              style={{
-                filter: nightMode ? "invert(0.7)" : "invert(1)",
-                zIndex: 2,
-                fontSize: "2rem",
-              }}
-              aria-label="Close"
-              onClick={() => setViewerIdx(null)}
-            />
-            {/* Prev Button */}
-            <button
-              className="btn position-absolute start-0 top-50 translate-middle-y"
-              style={{
-                left: 8,
-                zIndex: 3,
-                opacity: viewerIdx > 0 ? 1 : 0.4,
-                pointerEvents: viewerIdx > 0 ? "auto" : "none",
-                borderRadius: 20,
-                fontWeight: 700,
-                fontSize: 20,
-                boxShadow: navBtnShadow,
-                border: navBtnBorder,
-                background: navBtnBg,
-                color: nightMode ? "#d6ccff" : "#333",
-                transition: "background 0.15s, box-shadow 0.15s",
-              }}
-              disabled={viewerIdx === 0}
-              onClick={() => setViewerIdx((idx) => idx - 1)}
-            >
-              &#8592;
-            </button>
-            {/* Next Button */}
-            <button
-              className="btn position-absolute end-0 top-50 translate-middle-y"
-              style={{
-                right: 8,
-                zIndex: 3,
-                opacity: viewerIdx < videos.length - 1 ? 1 : 0.4,
-                pointerEvents:
-                  viewerIdx < videos.length - 1 ? "auto" : "none",
-                borderRadius: 20,
-                fontWeight: 700,
-                fontSize: 20,
-                boxShadow: navBtnShadow,
-                border: navBtnBorder,
-                background: navBtnBg,
-                color: nightMode ? "#d6ccff" : "#333",
-                transition: "background 0.15s, box-shadow 0.15s",
-              }}
-              disabled={viewerIdx === videos.length - 1}
-              onClick={() => setViewerIdx((idx) => idx + 1)}
-            >
-              &#8594;
-            </button>
-            {/* Video Player */}
-            <div
-              className="position-relative w-100 d-flex flex-column align-items-center"
-              style={{ maxWidth: 480 }}
-            >
-              <video
-                ref={videoRef}
-                key={viewerIdx}
-                src={videos[viewerIdx].src}
-                controls
-                autoPlay
-                playsInline
-                className="rounded-4 shadow"
+              {/* Video Player with Gradient Border */}
+              <div
                 style={{
                   width: "100%",
-                  maxWidth: 480,
-                  height: "60vh",
-                  objectFit: "contain",
-                  background: nightMode ? "#1a1030" : "#fff8",
-                  borderRadius: "22px",
-                  boxShadow: nightMode
-                    ? "0 8px 40px #7f53ff50"
-                    : "0 8px 40px #ffb3d650",
-                  transition: "box-shadow 0.2s",
-                }}
-              />
-              {/* Video Title */}
-              <div
-                style={{
-                  marginTop: 12,
-                  fontFamily: "'Poppins', 'Montserrat', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "1rem",
-                  color: accentColor,
-                  letterSpacing: "0.5px",
-                  textAlign: "center",
+                  borderRadius: 20,
+                  padding: 2,
+                  background: `linear-gradient(135deg, ${videos[viewerIdx].tagColor}, #fff4, ${videos[viewerIdx].tagColor}88)`,
+                  boxShadow: `0 8px 40px ${videos[viewerIdx].tagColor}55`,
                 }}
               >
-                {videos[viewerIdx].title}
+                <div
+                  style={{
+                    borderRadius: 19,
+                    overflow: "hidden",
+                    background: "#000",
+                  }}
+                >
+                  <video
+                    ref={videoRef}
+                    key={viewerIdx}
+                    src={videos[viewerIdx].src}
+                    controls
+                    autoPlay
+                    playsInline
+                    style={{
+                      width: "100%",
+                      maxHeight: "58vh",
+                      objectFit: "contain",
+                      display: "block",
+                      background: "#000",
+                    }}
+                  />
+                </div>
               </div>
-              {/* Bouncy Dots */}
+
+              {/* Navigation Bar */}
               <div
-                className="position-absolute start-50 translate-middle-x"
-                style={{
-                  bottom: -30,
-                  zIndex: 2,
-                  width: "92%",
-                  maxWidth: 340,
-                  left: "50%",
-                  pointerEvents: "none",
-                }}
+                className="d-flex align-items-center justify-content-between w-100"
+                style={{ gap: 12, padding: "0 4px" }}
               >
-                <div className="mt-2 d-flex gap-2 justify-content-center">
-                  {videos.map((_, i) => (
-                    <div
+                {/* Prev */}
+                <button
+                  onClick={() => setViewerIdx((i) => i - 1)}
+                  disabled={viewerIdx === 0}
+                  style={{
+                    borderRadius: 14,
+                    border: "1.5px solid rgba(255,255,255,0.25)",
+                    background: "rgba(255,255,255,0.12)",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    padding: "8px 18px",
+                    cursor: viewerIdx === 0 ? "not-allowed" : "pointer",
+                    opacity: viewerIdx === 0 ? 0.3 : 1,
+                    backdropFilter: "blur(6px)",
+                    fontFamily: "'Poppins', sans-serif",
+                    transition: "all 0.2s ease",
+                    flexShrink: 0,
+                  }}
+                >
+                  ← Prev
+                </button>
+
+                {/* Dots */}
+                <div className="d-flex gap-2 align-items-center flex-wrap justify-content-center">
+                  {videos.map((v, i) => (
+                    <button
                       key={i}
-                      className="rounded-circle"
+                      onClick={() => setViewerIdx(i)}
                       style={{
-                        width: 13,
-                        height: 13,
-                        background: i === viewerIdx ? dotActive : dotInactive,
-                        border: `2px solid ${dotBorder}`,
-                        display: "inline-block",
-                        animation:
+                        width: i === viewerIdx ? 22 : 10,
+                        height: 10,
+                        borderRadius: 999,
+                        border: "none",
+                        background:
                           i === viewerIdx
-                            ? "videoDotBounce 0.4s"
-                            : undefined,
+                            ? videos[viewerIdx].tagColor
+                            : "rgba(255,255,255,0.35)",
+                        cursor: "pointer",
+                        transition: "all 0.25s ease",
+                        padding: 0,
                         boxShadow:
                           i === viewerIdx
-                            ? dotShadow
-                            : "0 1.5px 4px #fff8",
-                        transition: "background 0.17s, box-shadow 0.15s",
+                            ? `0 2px 10px ${videos[viewerIdx].tagColor}88`
+                            : "none",
                       }}
                     />
                   ))}
                 </div>
+
+                {/* Next */}
+                <button
+                  onClick={() => setViewerIdx((i) => i + 1)}
+                  disabled={viewerIdx === videos.length - 1}
+                  style={{
+                    borderRadius: 14,
+                    border: "1.5px solid rgba(255,255,255,0.25)",
+                    background: "rgba(255,255,255,0.12)",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    padding: "8px 18px",
+                    cursor:
+                      viewerIdx === videos.length - 1 ? "not-allowed" : "pointer",
+                    opacity: viewerIdx === videos.length - 1 ? 0.3 : 1,
+                    backdropFilter: "blur(6px)",
+                    fontFamily: "'Poppins', sans-serif",
+                    transition: "all 0.2s ease",
+                    flexShrink: 0,
+                  }}
+                >
+                  Next →
+                </button>
               </div>
             </div>
-          </div>
-          {/* Dot Bounce Animation */}
-          <style>{`
-            @keyframes videoDotBounce {
-              0% { transform: scale(1); }
-              50% { transform: scale(1.35); }
-              100% { transform: scale(1); }
-            }
-          `}</style>
-        </div>
-      )}
+
+            {/* Fade-In Keyframe */}
+            <style>{`
+              @keyframes videoFadeIn {
+                from { opacity: 0; transform: scale(0.97); }
+                to { opacity: 1; transform: scale(1); }
+              }
+            `}</style>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

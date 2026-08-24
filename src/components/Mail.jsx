@@ -1,409 +1,647 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+// ---- Letters Data ----
+const letters = [
+  {
+    id: "love",
+    label: "💌 Love Letter",
+    icon: "💌",
+    sealEmoji: "✉️",
+    openEmoji: "💌",
+    tagColor: "#ff69b4",
+    tagLabel: "From Rith",
+    gradient: "linear-gradient(135deg, #ff69b4 0%, #ff8cb3 100%)",
+    waxColor: "#ff4b72",
+    to: "Mary",
+    from: "Rith",
+    title: "My Sweetie 💖",
+    subtitle: "A letter just for you",
+    body: [
+      "My sweetie, every single day I wake up grateful that you walked into my life.",
+      "You light up my world with your smile, your laughter, and the warmth of your heart. I love the way you scrunch your nose when you laugh, the way you hold my hand like you never want to let go.",
+      "No matter how hard any day gets, just thinking of you makes everything feel okay again.",
+      "Thank you for being my safe place, my adventure partner, and my favorite person in the whole universe.",
+    ],
+    signature: "Forever yours, Rith 💖",
+    songTitle: null,
+  },
+  {
+    id: "anniversary",
+    label: "💍 Anniversary",
+    icon: "💍",
+    sealEmoji: "💍",
+    openEmoji: "💝",
+    tagColor: "#ffd700",
+    tagLabel: "Special ✨",
+    gradient: "linear-gradient(135deg, #ffd700 0%, #ffba00 100%)",
+    waxColor: "#ff8c00",
+    to: "Mary",
+    from: "Rith",
+    title: "Our Anniversary 💍",
+    subtitle: "Another beautiful chapter together",
+    body: [
+      "Happy Anniversary, my love! Today marks another beautiful month of our journey together.",
+      "From our very first date to this very moment, every day with you has felt like a dream I never want to wake up from.",
+      "Here's to two months of love, laughter, late-night talks, stolen glances, and adventures that I will remember forever.",
+      "I love you more than words can ever capture — but I'll keep trying every day for the rest of my life.",
+    ],
+    signature: "With all my love, Rith 💕",
+    songTitle: "Perfect — Ed Sheeran 🎵",
+    songSrc: "./assets/music/anniversary-song.mp3",
+  },
+  {
+    id: "goodnight",
+    label: "🌙 Good Night",
+    icon: "🌙",
+    sealEmoji: "🌙",
+    openEmoji: "🌛",
+    tagColor: "#7f53ff",
+    tagLabel: "Nightly ✨",
+    gradient: "linear-gradient(135deg, #7f53ff 0%, #a77dfd 100%)",
+    waxColor: "#5b2eff",
+    to: "Mary",
+    from: "Rith",
+    title: "Good Night 🌙",
+    subtitle: "Sweet dreams, my love",
+    body: [
+      "As the stars begin to fill the sky tonight, I just want you to know that you are the last thought on my mind before I close my eyes.",
+      "I hope your dreams are as beautiful and magical as the way you make me feel every single day.",
+      "Sleep well, my love. Tomorrow I get to see your smile again — and that is the best reason to wake up.",
+      "The night sky has a million stars, but none shine as brightly as you do to me.",
+    ],
+    signature: "Sweet dreams always, Rith 🌠",
+    songTitle: null,
+  },
+];
+
+// ---- Floating Hearts Background ----
+function FloatingHearts({ color }) {
+  const hearts = ["💕", "✨", "💖", "🌸", "💫", "❤️"];
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        overflow: "hidden",
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+    >
+      {[...Array(12)].map((_, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            fontSize: `${0.7 + Math.random() * 1}rem`,
+            opacity: 0.08 + Math.random() * 0.12,
+            animation: `floatUp ${3 + Math.random() * 4}s ease-in-out infinite`,
+            animationDelay: `${Math.random() * 4}s`,
+          }}
+        >
+          {hearts[i % hearts.length]}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Mail({ nightMode }) {
-  const [open, setOpen] = useState(false);
-  const [isAnniversary, setIsAnniversary] = useState(false);
+  const [selectedLetterId, setSelectedLetterId] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [sealBroken, setSealBroken] = useState({});
   const audioRef = useRef(null);
 
-  // Colors & styles for night and light mode
-  const pink = "#ff69b4";
-  const galaxyPink = "#a36dfc";
-  const nightBorder = "2.8px solid #a77dfd";
-  const lightBorder = "2.8px solid #fd2d6c";
-  const cardBg = "transparent";
-  const noteBg = "transparent";
-  const noteBorder = nightMode ? "2px dashed #b993ff" : "2px dashed #ff69b4";
-  const noteColor = nightMode ? "#ebdafd" : "#a8235d";
-  const subColor = nightMode ? "#d6ccff" : "#ba7bc9";
-  const shadow = nightMode ? "0 8px 40px #7f53ff40" : "0 8px 40px #fd2d6c33";
-  const buttonColor = nightMode ? "#b993ff" : pink;
+  const selectedLetter = letters.find((l) => l.id === selectedLetterId);
 
-  // Anniversary colors
-  const anniversaryGold = "#ffd700";
-  const anniversaryBorder = nightMode ? "2.8px solid #ffd700" : "2.8px solid #ff8c00";
-  const anniversaryNoteBorder = nightMode ? "2px dashed #ffd700" : "2px dashed #ff8c00";
-
-  const handleSongPlay = () => {
+  // Reset letter state on close
+  const handleClose = () => {
+    setIsOpen(false);
+    setTimeout(() => setSelectedLetterId(null), 300);
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(error => {
-          console.log("Audio play failed:", error);
-        });
-      }
-      setIsPlaying(!isPlaying);
+      audioRef.current.pause();
+      setIsPlaying(false);
     }
   };
 
-  const handleAudioEnded = () => {
-    setIsPlaying(false);
+  const handleOpenLetter = (letter) => {
+    setSelectedLetterId(letter.id);
+    setSealBroken((prev) => ({ ...prev, [letter.id]: true }));
+    setTimeout(() => setIsOpen(true), 80);
   };
+
+  const handleSongPlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(() => {});
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  // Colors
+  const textColor = nightMode ? "#e8deff" : "#332233";
+  const subText = nightMode ? "#bca6e8" : "#9b6882";
+  const sectionBg = nightMode
+    ? "linear-gradient(180deg, rgba(20,12,45,0.0) 0%, rgba(40,25,80,0.12) 100%)"
+    : "linear-gradient(180deg, rgba(255,230,245,0.0) 0%, rgba(255,210,235,0.1) 100%)";
 
   return (
     <div
-      className="container d-flex flex-column align-items-center"
-      style={{
-        minHeight: 380,
-        paddingTop: 36,
-        paddingBottom: 40,
-        position: "relative",
-      }}
+      className="position-relative pb-5"
+      style={{ background: sectionBg, overflow: "hidden" }}
     >
-      {/* Mode Toggle */}
-      <div className="mb-3">
-        <button
-          className="btn btn-sm me-2"
-          style={{
-            color: !isAnniversary ? buttonColor : "#666",
-            borderColor: !isAnniversary ? buttonColor : "#ddd",
-            borderWidth: 1,
-            borderStyle: "solid",
-            background: !isAnniversary ? (nightMode ? "#b993ff22" : "#ff69b422") : "transparent",
-            fontFamily: "'Poppins', sans-serif",
-            fontWeight: 600,
-            fontSize: 12,
-          }}
-          onClick={() => setIsAnniversary(false)}
-        >
-          Regular
-        </button>
-        <button
-          className="btn btn-sm"
-          style={{
-            color: isAnniversary ? anniversaryGold : "#666",
-            borderColor: isAnniversary ? anniversaryGold : "#ddd",
-            borderWidth: 1,
-            borderStyle: "solid",
-            background: isAnniversary ? (nightMode ? "#ffd70022" : "#ff8c0022") : "transparent",
-            fontFamily: "'Poppins', sans-serif",
-            fontWeight: 600,
-            fontSize: 12,
-          }}
-          onClick={() => setIsAnniversary(true)}
-        >
-          Anniversary ✨
-        </button>
+      <FloatingHearts color={nightMode ? "#cfaeff" : "#ff69b4"} />
+
+      <div className="container px-3 position-relative" style={{ zIndex: 1 }}>
+        {/* ---- Section Header ---- */}
+        <div className="text-center mb-4" style={{ paddingTop: 32 }}>
+          <div
+            style={{
+              fontFamily: "'Poppins', 'Montserrat', sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(1.1rem, 3.5vw, 1.35rem)",
+              color: nightMode ? "#cfaeff" : "#ff69b4",
+              textShadow: nightMode
+                ? "0 2px 14px rgba(127,83,255,0.45)"
+                : "0 2px 10px rgba(255,105,180,0.3)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <span>💌</span>
+            Letters from Rith
+            <span>💌</span>
+          </div>
+          <div
+            style={{
+              fontFamily: "'Caveat', cursive",
+              fontSize: "clamp(1rem, 2.8vw, 1.18rem)",
+              color: nightMode ? "#d6ccff" : "#b0406a",
+              marginTop: 4,
+              opacity: 0.85,
+            }}
+          >
+            ✨ Choose a letter to open and read 💕
+          </div>
+        </div>
+
+        {/* ---- Letter Envelope Cards Grid ---- */}
+        <div className="row g-3 justify-content-center mb-2" style={{ maxWidth: 780, margin: "0 auto" }}>
+          {letters.map((letter, idx) => {
+            const isBroken = sealBroken[letter.id];
+            return (
+              <div
+                key={letter.id}
+                className="col-12 col-md-4"
+                data-aos="fade-up"
+                data-aos-delay={idx * 80}
+              >
+                {/* Envelope Card */}
+                <div
+                  onClick={() => handleOpenLetter(letter)}
+                  style={{
+                    borderRadius: 24,
+                    overflow: "hidden",
+                    background: nightMode
+                      ? "rgba(32,18,60,0.82)"
+                      : "rgba(255,255,255,0.9)",
+                    border: nightMode
+                      ? `1.5px solid ${letter.tagColor}44`
+                      : `1.5px solid ${letter.tagColor}55`,
+                    boxShadow: nightMode
+                      ? `0 8px 32px ${letter.tagColor}25`
+                      : `0 8px 32px ${letter.tagColor}20`,
+                    cursor: "pointer",
+                    transition: "transform 0.28s ease, box-shadow 0.28s ease",
+                    backdropFilter: "blur(12px)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-7px) scale(1.025)";
+                    e.currentTarget.style.boxShadow = `0 18px 44px ${letter.tagColor}45`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "none";
+                    e.currentTarget.style.boxShadow = nightMode
+                      ? `0 8px 32px ${letter.tagColor}25`
+                      : `0 8px 32px ${letter.tagColor}20`;
+                  }}
+                >
+                  {/* Gradient Top Bar */}
+                  <div
+                    style={{
+                      height: 6,
+                      background: letter.gradient,
+                      borderRadius: "24px 24px 0 0",
+                    }}
+                  />
+
+                  {/* Envelope Visual */}
+                  <div
+                    className="d-flex flex-column align-items-center justify-content-center py-4 position-relative"
+                    style={{ minHeight: 150 }}
+                  >
+                    {/* Animated Envelope */}
+                    <div
+                      style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 20,
+                        background: nightMode
+                          ? `rgba(255,255,255,0.06)`
+                          : `${letter.tagColor}14`,
+                        border: `2px solid ${letter.tagColor}55`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "2.4rem",
+                        boxShadow: `0 6px 24px ${letter.tagColor}30`,
+                        animation: "mailBounce 2.2s ease-in-out infinite",
+                        position: "relative",
+                      }}
+                    >
+                      {isBroken ? letter.openEmoji : letter.sealEmoji}
+
+                      {/* Wax Seal Badge */}
+                      {!isBroken && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: -10,
+                            right: -10,
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            background: letter.waxColor,
+                            border: "2px solid rgba(255,255,255,0.6)",
+                            boxShadow: `0 2px 10px ${letter.waxColor}88`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "0.7rem",
+                          }}
+                        >
+                          🔒
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Tag */}
+                    <div
+                      className="mt-3 px-3 py-1 rounded-pill"
+                      style={{
+                        background: letter.tagColor + "22",
+                        border: `1px solid ${letter.tagColor}55`,
+                        color: letter.tagColor,
+                        fontFamily: "'Poppins', sans-serif",
+                        fontSize: "0.7rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.4px",
+                      }}
+                    >
+                      {letter.tagLabel}
+                    </div>
+
+                    {/* Title & Subtitle */}
+                    <div
+                      style={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 800,
+                        fontSize: "clamp(0.9rem, 2.5vw, 1.05rem)",
+                        color: textColor,
+                        textAlign: "center",
+                        marginTop: 8,
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {letter.title}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "'Caveat', cursive",
+                        fontSize: "clamp(0.88rem, 2.2vw, 1rem)",
+                        color: subText,
+                        textAlign: "center",
+                        marginTop: 2,
+                      }}
+                    >
+                      {letter.subtitle}
+                    </div>
+
+                    {/* Open Button */}
+                    <div
+                      className="mt-3 px-4 py-1.5 rounded-pill"
+                      style={{
+                        background: letter.gradient,
+                        color: "#fff",
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 700,
+                        fontSize: "0.8rem",
+                        boxShadow: `0 4px 14px ${letter.tagColor}55`,
+                        transition: "transform 0.2s ease",
+                      }}
+                    >
+                      {isBroken ? "💌 Read again" : "💌 Open Letter"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Centered Top Title */}
-      <h2
-        className="fw-bold"
-        style={{
-          fontFamily: "'Pacifico', 'Caveat', cursive",
-          fontWeight: 700,
-          fontSize: "1.22rem",
-          letterSpacing: "1.2px",
-          color: isAnniversary ? anniversaryGold : (nightMode ? "#cfaeff" : pink),
-          textShadow: isAnniversary
-            ? "0 2px 18px #ffd70055, 0 1px 0 #fff"
-            : nightMode
-              ? "0 2px 18px #7645b955, 0 1px 0 #fff"
-              : "0 1px 10px #ffb3d633, 0 1px 0 #fff",
-          opacity: 0.96,
-          marginBottom: 30,
-          textAlign: "center",
-        }}
-      >
-        {isAnniversary ? "Our Anniversary 💍" : "My Sweetie 💌"}
-      </h2>
-
-      {/* Envelope Button */}
-      {!open && (
-        <button
-          className="btn btn-light shadow-lg rounded-circle position-relative"
-          style={{
-            width: 112,
-            height: 112,
-            fontSize: 45,
-            border: isAnniversary ? anniversaryBorder : (nightMode ? nightBorder : lightBorder),
-            color: isAnniversary ? anniversaryGold : (nightMode ? galaxyPink : "#fd2d6c"),
-            background: cardBg,
-            transition: "all 0.32s",
-            boxShadow: isAnniversary
-              ? (nightMode ? "0 8px 40px #ffd70040" : "0 8px 40px #ff8c0033")
-              : shadow,
-            animation: "mailBounce 1.3s infinite",
-            marginBottom: 18,
-            outline: "none",
-          }}
-          onClick={() => setOpen(true)}
-        >
-          <span role="img" aria-label="mail">
-            {isAnniversary ? "💍" : "✉️"}
-          </span>
-          {/* Cute ribbon */}
-          <span
-            style={{
-              position: "absolute",
-              bottom: -10,
-              left: "50%",
-              transform: "translateX(-50%)",
-              fontSize: 22,
-              color: isAnniversary ? anniversaryGold : (nightMode ? "#b993ff" : pink),
-              pointerEvents: "none",
-              filter: isAnniversary
-                ? "drop-shadow(0 1.5px 8px #ffd70088)"
-                : nightMode
-                  ? "drop-shadow(0 1.5px 8px #a77dfd88)"
-                  : "drop-shadow(0 1.5px 6px #ffb3d688)",
-            }}
-            role="img"
-            aria-label="ribbon"
-          >
-            {isAnniversary ? "✨" : "🎀"}
-          </span>
-        </button>
-      )}
-
-      {/* Letter Card */}
-      {open && (
+      {/* ================= FULL-SCREEN LETTER READER MODAL ================= */}
+      {selectedLetter && isOpen && (
         <div
-          className="d-flex flex-column align-items-center"
-          style={{ animation: "fadeinUp 0.65s" }}
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
+          style={{
+            background: "rgba(0,0,0,0.88)",
+            backdropFilter: "blur(20px)",
+            zIndex: 99999,
+            animation: "letterReveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+            overflow: "auto",
+          }}
+          onClick={handleClose}
         >
-          {/* Open Envelope */}
           <div
-            className="mb-3"
-            style={{
-              width: 108,
-              height: 108,
-              fontSize: 50,
-              background: isAnniversary
-                ? (nightMode
-                  ? "radial-gradient(circle, #4a3c0a 40%, #2a2205 100%)"
-                  : "radial-gradient(circle, #fff9e6, #fff2cc 75%)")
-                : (nightMode
-                  ? "radial-gradient(circle, #34235a 40%, #211241 100%)"
-                  : "radial-gradient(circle, #fff, #ffeaf5 75%)"),
-              borderRadius: "18px",
-              boxShadow: isAnniversary
-                ? (nightMode ? "0 8px 36px #ffd70040" : "0 8px 36px #ff8c0022")
-                : (nightMode ? "0 8px 36px #9f53f940" : "0 8px 36px #fd2d6c22"),
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: isAnniversary ? anniversaryGold : (nightMode ? galaxyPink : "#fd2d6c"),
-              border: isAnniversary
-                ? (nightMode ? "2.5px solid #ffd700" : "2.5px solid #ff8c00")
-                : (nightMode ? "2.5px solid #b993ff" : "2.5px solid #ffe6ef"),
-              marginBottom: -30,
-              transform: "rotateX(18deg) scaleY(0.97)",
-              animation: "mailPop 0.7s cubic-bezier(.23,1.02,.32,1) both",
-            }}
-          >
-            <span role="img" aria-label="open-mail">
-              {isAnniversary ? "💝" : "📬"}
-            </span>
-          </div>
-
-          {/* Ribbon */}
-          <div
-            style={{
-              width: 80,
-              height: 15,
-              background: isAnniversary
-                ? (nightMode
-                  ? "linear-gradient(90deg, #b8860b 40%, #ffd700 100%)"
-                  : "linear-gradient(90deg, #ff8c00 40%, #ffd700 100%)")
-                : (nightMode
-                  ? "linear-gradient(90deg, #7645b9 40%, #b993ff 100%)"
-                  : "linear-gradient(90deg, #fd2d6c 40%, #ffb3d6 100%)"),
-              borderRadius: 8,
-              position: "relative",
-              top: -7,
-              marginBottom: 3,
-              boxShadow: isAnniversary
-                ? (nightMode ? "0 2px 10px #ffd70044" : "0 2px 10px #ff8c0044")
-                : (nightMode ? "0 2px 10px #8f6dfb44" : "0 2px 10px #fd2d6c44"),
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span
-              style={{
-                color: "#fff",
-                fontFamily: "'Pacifico', cursive",
-                fontSize: 13,
-                letterSpacing: 1,
-                fontWeight: 700,
-              }}
-            >
-              {isAnniversary ? "Special" : "For you"}
-            </span>
-          </div>
-
-          <div
-            className="rounded-4 shadow-lg px-3 px-md-4 py-3"
             style={{
               width: "100%",
-              maxWidth: 420,
-              marginTop: 0,
-              border: isAnniversary ? anniversaryNoteBorder : noteBorder,
-              textAlign: "left",
-              animation: "fadeinUp 0.65s 0.09s both",
-              fontFamily:
-                "'Caveat', 'Pacifico', cursive, 'Poppins', sans-serif",
-              boxShadow: isAnniversary
-                ? (nightMode ? "0 4px 32px #ffd70025" : "0 4px 32px #ff8c0025")
-                : (nightMode ? "0 4px 32px #7f53ff25" : "0 4px 32px #fd2d6c25"),
-              fontSize: 18,
-              color: isAnniversary ? (nightMode ? "#fff3cd" : "#8b4513") : noteColor,
-              position: "relative",
-              background: noteBg,
-              transition: "all 0.3s",
+              maxWidth: 520,
+              borderRadius: 28,
+              overflow: "hidden",
+              background: nightMode
+                ? "rgba(25, 14, 52, 0.97)"
+                : "rgba(255, 252, 255, 0.98)",
+              border: `2px solid ${selectedLetter.tagColor}55`,
+              boxShadow: `0 24px 80px ${selectedLetter.tagColor}55, 0 4px 20px rgba(0,0,0,0.4)`,
+              animation: "letterReveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
             }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-2" style={{ fontSize: 16, color: isAnniversary ? (nightMode ? "#ffd700" : "#d2691e") : subColor }}>
-              <span role="img" aria-label="star">
-                {isAnniversary ? "💫" : "🌟"}
-              </span>{" "}
-              To: Mary
-            </div>
-            <div>
-              <i>
-                {isAnniversary ? (
-                  <>
-                    Happy Anniversary, my love! Today marks another month of our beautiful journey together.
-                    <br />
-                    From our first date to this moment, every day with you has been a gift.
-                    <br />
-                    Here's two months of love, laughter, and adventures together.
-                    <br />
-                    <br />
-                    <b>With all my love, Rith 💕</b>
-                  </>
-                ) : (
-                  <>
-                    My sweetie, you light up my world every day with your love and
-                    kindness.
-                    <br />
-                    I cherish every moment we share and look forward to many more.
-                    <br />
-                    Thank you for being my everything.
-                    <br />
-                    <br />
-                    <b>Forever yours, Rith 💖</b>
-                  </>
-                )}
-              </i>
-            </div>
-
-            {/* Anniversary Song Section */}
-            {isAnniversary && (
-              <div className="mt-3 p-3 rounded-3" style={{
-                background: nightMode ? "#ffd70011" : "#fff9e6",
-                border: nightMode ? "1px solid #ffd70033" : "1px solid #ff8c0033",
-              }}>
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: isAnniversary ? (nightMode ? "#ffd700" : "#d2691e") : subColor }}>
-                      🎵 Our Anniversary Song
-                    </div>
-                    <div style={{ fontSize: 12, color: isAnniversary ? (nightMode ? "#fff3cd" : "#8b4513") : noteColor }}>
-                      "Perfect" - Ed Sheeran
-                    </div>
-                  </div>
-                  <button
-                    className="btn btn-sm"
-                    style={{
-                      color: anniversaryGold,
-                      borderColor: anniversaryGold,
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      background: "transparent",
-                      fontFamily: "'Poppins', sans-serif",
-                      fontWeight: 600,
-                      fontSize: 12,
-                      padding: "4px 12px",
-                    }}
-                    onClick={handleSongPlay}
-                  >
-                    {isPlaying ? "⏸️ Pause" : "▶️ Play"}
-                  </button>
-                </div>
-                {isPlaying && (
-                  <div className="mt-2">
-                    <div style={{ fontSize: 12, color: isAnniversary ? (nightMode ? "#fff3cd" : "#8b4513") : noteColor }}>
-                      🎶 Now playing our special song... 🎶
-                    </div>
-                    <div className="mt-1" style={{
-                      height: 3,
-                      background: nightMode ? "#ffd70033" : "#ff8c0033",
-                      borderRadius: 2,
-                      overflow: "hidden"
-                    }}>
-                      <div style={{
-                        height: "100%",
-                        width: "100%",
-                        background: anniversaryGold,
-                        animation: "songProgress 4s linear infinite"
-                      }} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="mt-3 text-end">
+            {/* Gradient Header */}
+            <div
+              className="position-relative p-4 pb-5 text-center"
+              style={{
+                background: selectedLetter.gradient,
+                borderRadius: "26px 26px 0 0",
+              }}
+            >
               <button
-                className="btn btn-sm"
+                onClick={handleClose}
+                aria-label="Close"
                 style={{
-                  color: isAnniversary ? anniversaryGold : buttonColor,
-                  borderColor: isAnniversary ? anniversaryGold : buttonColor,
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  background: "transparent",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: 600,
+                  position: "absolute",
+                  top: 14,
+                  right: 14,
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.25)",
+                  border: "1.5px solid rgba(255,255,255,0.5)",
+                  color: "#fff",
+                  fontSize: "0.95rem",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backdropFilter: "blur(4px)",
                 }}
-                onClick={() => setOpen(false)}
               >
-                Close
+                ✕
+              </button>
+
+              <div style={{ fontSize: "2.8rem", marginBottom: 6 }}>
+                {selectedLetter.openEmoji}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 800,
+                  fontSize: "1.25rem",
+                  color: "#fff",
+                  textShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                }}
+              >
+                {selectedLetter.title}
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Caveat', cursive",
+                  fontSize: "1.05rem",
+                  color: "rgba(255,255,255,0.88)",
+                  marginTop: 2,
+                }}
+              >
+                {selectedLetter.subtitle}
+              </div>
+            </div>
+
+            {/* Paper Tear Divider */}
+            <div
+              style={{
+                height: 28,
+                background: nightMode ? "rgba(25, 14, 52, 0.97)" : "rgba(255, 252, 255, 0.98)",
+                marginTop: -20,
+                borderRadius: "50% 50% 0 0 / 20px 20px 0 0",
+                position: "relative",
+                zIndex: 2,
+              }}
+            />
+
+            {/* Letter Body */}
+            <div className="px-4 pb-4 pt-0" style={{ marginTop: -8 }}>
+              {/* To: Header */}
+              <div
+                style={{
+                  fontFamily: "'Caveat', cursive",
+                  fontSize: "1.1rem",
+                  color: selectedLetter.tagColor,
+                  fontWeight: 700,
+                  marginBottom: 12,
+                }}
+              >
+                ✨ To: {selectedLetter.to}
+              </div>
+
+              {/* Lined Paper Effect */}
+              <div
+                style={{
+                  background: nightMode
+                    ? `repeating-linear-gradient(transparent, transparent 27px, ${selectedLetter.tagColor}18 28px)`
+                    : `repeating-linear-gradient(transparent, transparent 27px, ${selectedLetter.tagColor}20 28px)`,
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  border: `1.5px dashed ${selectedLetter.tagColor}44`,
+                  marginBottom: 16,
+                }}
+              >
+                {selectedLetter.body.map((para, i) => (
+                  <p
+                    key={i}
+                    style={{
+                      fontFamily: "'Caveat', cursive",
+                      fontSize: "clamp(1.05rem, 2.8vw, 1.2rem)",
+                      color: textColor,
+                      lineHeight: 1.8,
+                      marginBottom: i < selectedLetter.body.length - 1 ? 10 : 0,
+                    }}
+                  >
+                    {para}
+                  </p>
+                ))}
+              </div>
+
+              {/* Signature */}
+              <div
+                style={{
+                  fontFamily: "'Pacifico', 'Caveat', cursive",
+                  fontSize: "clamp(1rem, 2.8vw, 1.15rem)",
+                  color: selectedLetter.tagColor,
+                  textAlign: "right",
+                  fontWeight: 700,
+                  marginBottom: 16,
+                }}
+              >
+                {selectedLetter.signature}
+              </div>
+
+              {/* Anniversary Song Player */}
+              {selectedLetter.songTitle && (
+                <>
+                  <audio
+                    ref={audioRef}
+                    onEnded={() => setIsPlaying(false)}
+                    onPause={() => setIsPlaying(false)}
+                    onPlay={() => setIsPlaying(true)}
+                  >
+                    <source src={selectedLetter.songSrc} type="audio/mpeg" />
+                  </audio>
+
+                  <div
+                    className="d-flex align-items-center gap-3 p-3 rounded-3"
+                    style={{
+                      background: nightMode
+                        ? "rgba(255,215,0,0.08)"
+                        : "rgba(255,215,0,0.12)",
+                      border: "1.5px solid rgba(255,215,0,0.35)",
+                      marginBottom: 16,
+                    }}
+                  >
+                    <button
+                      onClick={handleSongPlay}
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: "50%",
+                        background: isPlaying
+                          ? "linear-gradient(135deg, #ffd700, #ff8c00)"
+                          : "rgba(255,215,0,0.25)",
+                        border: "2px solid rgba(255,215,0,0.7)",
+                        color: isPlaying ? "#fff" : "#ffd700",
+                        fontSize: "1.1rem",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        transition: "all 0.2s ease",
+                        boxShadow: isPlaying ? "0 4px 16px rgba(255,215,0,0.5)" : "none",
+                      }}
+                    >
+                      {isPlaying ? "⏸" : "▶"}
+                    </button>
+
+                    <div>
+                      <div
+                        style={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 700,
+                          fontSize: "0.82rem",
+                          color: "#ffd700",
+                        }}
+                      >
+                        🎵 Our Special Song
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "'Caveat', cursive",
+                          fontSize: "0.95rem",
+                          color: textColor,
+                          opacity: 0.8,
+                        }}
+                      >
+                        {selectedLetter.songTitle}
+                      </div>
+
+                      {/* Animated Equalizer */}
+                      {isPlaying && (
+                        <div className="d-flex gap-1 align-items-end mt-1" style={{ height: 14 }}>
+                          {[...Array(6)].map((_, i) => (
+                            <div
+                              key={i}
+                              style={{
+                                width: 4,
+                                borderRadius: 2,
+                                background: "#ffd700",
+                                animation: `equalizer 0.${6 + i}s ease-in-out infinite alternate`,
+                                animationDelay: `${i * 0.1}s`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Close Button */}
+              <button
+                onClick={handleClose}
+                className="w-100 rounded-pill py-2 border-0"
+                style={{
+                  background: selectedLetter.gradient,
+                  color: "#fff",
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "0.92rem",
+                  cursor: "pointer",
+                  boxShadow: `0 6px 20px ${selectedLetter.tagColor}55`,
+                  transition: "transform 0.2s ease",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
+              >
+                💌 Close Letter
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Hidden Audio Element */}
-      <audio
-        ref={audioRef}
-        onEnded={handleAudioEnded}
-        onPause={() => setIsPlaying(false)}
-        onPlay={() => setIsPlaying(true)}
-      >
-        <source src="./assets/music/anniversary-song.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-
-      {/* Animations & Cute font */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Pacifico:wght@400&family=Caveat:wght@700&display=swap"
-        rel="stylesheet"
-      />
+      {/* Keyframes */}
       <style>{`
-        @keyframes fadeinUp {
-          from { opacity: 0; transform: translateY(30px);}
-          to { opacity: 1; transform: none;}
-        }
-        @keyframes mailPop {
-          0% { transform: scale(0.82) rotateX(35deg);}
-          80% { transform: scale(1.06) rotateX(18deg);}
-          100% { transform: scale(1) rotateX(18deg);}
-        }
         @keyframes mailBounce {
-          0%, 100% { transform: translateY(0);}
-          16% { transform: translateY(-8px);}
-          35% { transform: translateY(5px);}
-          60% { transform: translateY(-2px);}
-          80% { transform: translateY(2px);}
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          30% { transform: translateY(-10px) rotate(-3deg); }
+          60% { transform: translateY(-4px) rotate(2deg); }
         }
-        @keyframes songProgress {
-          0% { transform: translateX(-100%);}
-          100% { transform: translateX(100%);}
+        @keyframes floatUp {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-18px) scale(1.08); }
+        }
+        @keyframes letterReveal {
+          0% { opacity: 0; transform: scale(0.85) translateY(30px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes equalizer {
+          0% { height: 4px; }
+          100% { height: 14px; }
         }
       `}</style>
     </div>
