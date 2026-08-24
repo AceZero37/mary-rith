@@ -173,41 +173,59 @@ function Footer({ nightMode }) {
         {/* ---- Love Stats Pills ---- */}
         <div className="d-flex justify-content-center flex-wrap gap-2 mb-4">
           {[
-            { icon: "📅", label: "Together since", value: "Aug 20, 2026" },
-            { icon: "📍", label: "Our city", value: "Phnom Penh 🇰🇭" },
-            { icon: "💌", label: "Love letters", value: "∞" },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                background: nightMode
-                  ? "rgba(127,83,255,0.12)"
-                  : "rgba(255,105,180,0.1)",
-                border: nightMode
-                  ? "1px solid rgba(167,125,253,0.25)"
-                  : "1px solid rgba(255,182,218,0.4)",
-                borderRadius: 20,
-                padding: "5px 14px",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <span style={{ fontSize: "0.9rem" }}>{stat.icon}</span>
-              <span
+            { icon: "📅", label: "Together since", value: "Aug 20, 2026", link: null },
+            { icon: "📍", label: "Rith's Location", value: "Phnom Penh 🇰🇭", link: "https://maps.app.goo.gl/xEurTTC7545mDJov6?g_st=ic" },
+            { icon: "📍", label: "Mary's Location", value: "Phnom Penh 💕", link: "https://maps.app.goo.gl/gB3zJS4REho6FgWh6?g_st=ic" },
+            { icon: "💌", label: "Love letters", value: "∞", link: null },
+          ].map((stat, i) => {
+            const Wrapper = stat.link ? "a" : "div";
+            const linkProps = stat.link
+              ? { href: stat.link, target: "_blank", rel: "noopener noreferrer", style: { textDecoration: "none" } }
+              : {};
+            return (
+              <Wrapper
+                key={i}
+                {...linkProps}
                 style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "clamp(0.65rem, 1.6vw, 0.74rem)",
-                  color: subColor,
-                  fontWeight: 500,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: nightMode
+                    ? "rgba(127,83,255,0.12)"
+                    : "rgba(255,105,180,0.1)",
+                  border: nightMode
+                    ? "1px solid rgba(167,125,253,0.25)"
+                    : "1px solid rgba(255,182,218,0.4)",
+                  borderRadius: 20,
+                  padding: "5px 14px",
+                  backdropFilter: "blur(8px)",
+                  textDecoration: "none",
+                  cursor: stat.link ? "pointer" : "default",
+                  transition: "transform 0.2s ease, background 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (stat.link) e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  if (stat.link) e.currentTarget.style.transform = "none";
                 }}
               >
-                {stat.label}:{" "}
-                <strong style={{ color: textColor }}>{stat.value}</strong>
-              </span>
-            </div>
-          ))}
+                <span style={{ fontSize: "0.9rem" }}>{stat.icon}</span>
+                <span
+                  style={{
+                    fontFamily: "'Poppins', sans-serif",
+                    fontSize: "clamp(0.65rem, 1.6vw, 0.74rem)",
+                    color: subColor,
+                    fontWeight: 500,
+                  }}
+                >
+                  {stat.label}:{" "}
+                  <strong style={{ color: textColor }}>{stat.value}</strong>
+                  {stat.link && <span style={{ fontSize: "0.7rem", marginLeft: 3, opacity: 0.8 }}>↗</span>}
+                </span>
+              </Wrapper>
+            );
+          })}
         </div>
 
         {/* Divider */}

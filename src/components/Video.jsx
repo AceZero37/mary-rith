@@ -65,7 +65,7 @@ const videos = [
     emoji: "😴",
     src: "../assets/video/7.mp4",
     tag: "Fun",
-    tagColor: "#00ff55ff",
+    tagColor: "#10ac84",
   },
 ];
 
