@@ -58,6 +58,15 @@ const videos = [
     tag: "Fun",
     tagColor: "#74b9ff",
   },
+  {
+    id: 7,
+    title: "Sleeping Time",
+    subtitle: "Sleeping Together 😴",
+    emoji: "😴",
+    src: "../assets/video/7.mp4",
+    tag: "Fun",
+    tagColor: "#00ff55ff",
+  },
 ];
 
 // ---- MAIN COMPONENT ----
@@ -105,7 +114,7 @@ const Video = ({ nightMode }) => {
   useEffect(() => {
     if (viewerIdx !== null && videoRef.current) {
       videoRef.current.load();
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
       setIsPlaying(true);
     }
   }, [viewerIdx]);
@@ -116,7 +125,7 @@ const Video = ({ nightMode }) => {
     const vRef = hoverVideoRefs.current[idx];
     if (vRef) {
       vRef.currentTime = 0;
-      vRef.play().catch(() => {});
+      vRef.play().catch(() => { });
     }
   };
 
@@ -211,8 +220,8 @@ const Video = ({ nightMode }) => {
                         ? "0 16px 44px rgba(127,83,255,0.4), 0 4px 14px rgba(0,0,0,0.3)"
                         : "0 16px 44px rgba(255,105,180,0.35), 0 4px 14px rgba(0,0,0,0.1)"
                       : nightMode
-                      ? "0 6px 24px rgba(127,83,255,0.18)"
-                      : "0 6px 24px rgba(255,105,180,0.14)",
+                        ? "0 6px 24px rgba(127,83,255,0.18)"
+                        : "0 6px 24px rgba(255,105,180,0.14)",
                     cursor: "pointer",
                     transition: "transform 0.28s ease, box-shadow 0.28s ease, border 0.2s ease",
                     transform: isHovered ? "translateY(-7px) scale(1.025)" : "none",
