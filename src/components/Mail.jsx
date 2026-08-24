@@ -235,11 +235,10 @@ function Mail({ nightMode }) {
             </span>
           </div>
 
-          {/* Sweet Note */}
           <div
-            className="rounded-4 shadow-lg px-4 py-3"
+            className="rounded-4 shadow-lg px-3 px-md-4 py-3"
             style={{
-              minWidth: 300,
+              width: "100%",
               maxWidth: 420,
               marginTop: 0,
               border: isAnniversary ? anniversaryNoteBorder : noteBorder,

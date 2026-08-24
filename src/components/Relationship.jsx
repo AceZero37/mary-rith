@@ -74,7 +74,7 @@ export default function Relationship({ nightMode }) {
         return sign;
       }
     }
-    return signs[0]; // fallback Capricorn
+    return signs[0];
   };
 
   const rithAge = getAge(rithBirth);
@@ -84,8 +84,7 @@ export default function Relationship({ nightMode }) {
 
   // Colors based on night mode
   const heartColor = nightMode ? "#b993ff" : "#ff69b4";
-  const headingColor = nightMode ? "#b993ff" : "#ff69b4";
-  const shadow = nightMode ? "0 2px 32px #8f6dfb26" : "0 2px 24px #ffb3c65c";
+  const headingColor = nightMode ? "#cfaeff" : "#ff69b4";
   const bubbleColor = nightMode ? "#d3c6fc" : "#ea4c89";
   const badgeBgRith = nightMode ? "#443264" : "#ffb3c6";
   const badgeBgMary = nightMode ? "#6958b9" : "#FFD6E0";
@@ -93,125 +92,155 @@ export default function Relationship({ nightMode }) {
   const badgeColor = "#fff";
   const nameColor = bubbleColor;
 
-  // Text style for single line text below images
-  const singleLineTextStyle = {
-    color: bubbleColor,
-    fontFamily: "'Caveat', cursive",
-    fontSize: "1.1rem",
-    whiteSpace: "nowrap",
-    marginTop: "8px",
-    fontWeight: 600,
-    textAlign: "center",
-  };
-
   return (
     <div
-      className="relationship-main-card mx-auto"
+      className="relationship-main-card mx-auto px-2"
       style={{
-        borderRadius: 22,
-        boxShadow: "none",
-        padding: "0 0 10px 0",
+        borderRadius: 24,
         marginBottom: 28,
-        maxWidth: 1200,
-        transition: "box-shadow 0.3s",
+        maxWidth: 1080,
       }}
     >
       {/* Relationship Heading */}
       <h2
-        className="fw-bold mb-4 text-center"
+        className="fw-bold mb-3 text-center"
         style={{
           fontFamily: "'Quicksand', cursive, sans-serif",
           fontWeight: 700,
-          fontSize: "2.5rem",
+          fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
           letterSpacing: "1px",
           color: headingColor,
           textShadow: nightMode
-            ? "0 2px 22px #7f53ff77, 0 1px 0 #fff"
-            : "0 2px 16px #fff4, 0 1px 0 #fff",
+            ? "0 2px 22px #7f53ff77"
+            : "0 2px 16px rgba(255, 105, 180, 0.3)",
         }}
         data-aos="fade-down"
       >
-        <span role="img" aria-label="sparkle">
-          ✨
-        </span>{" "}
-        Relationship{" "}
-        <span role="img" aria-label="sparkle">
-          ✨
-        </span>
+        <span>✨</span> Relationship <span>✨</span>
       </h2>
-      <div className="container-fluid py-4">
-        <div className="row flex-nowrap justify-content-center align-items-center relationship-row-scroll">
-          {/* Rith */}
+
+      {/* Main Relationship Card Container */}
+      <div
+        className="p-3 p-md-4 rounded-4 shadow-sm mx-auto"
+        style={{
+          maxWidth: 900,
+          width: "100%",
+          background: nightMode
+            ? "rgba(35, 22, 65, 0.55)"
+            : "rgba(255, 255, 255, 0.65)",
+          backdropFilter: "blur(12px)",
+          border: nightMode
+            ? "1.5px solid rgba(167, 125, 253, 0.3)"
+            : "1.5px solid #ffe1ef",
+          boxShadow: nightMode
+            ? "0 8px 32px rgba(127, 83, 255, 0.2)"
+            : "0 8px 30px rgba(255, 105, 180, 0.15)",
+        }}
+      >
+        <div className="row align-items-center justify-content-center g-3">
+          {/* Rith Profile */}
           <div
-            className="col-12 col-md-4 d-flex flex-column align-items-center px-3 py-3"
+            className="col-6 col-md-4 d-flex flex-column align-items-center text-center"
             data-aos="fade-up"
             data-aos-delay="100"
           >
-            <img
-              src="./assets/images/1.jpg"
-              alt="Rith"
-              className="rounded-circle shadow"
-              style={{
-                width: 120,
-                height: 120,
-                objectFit: "cover",
-                border: "6px solid #fff",
-                background: "#fff",
-                boxShadow: shadow,
-              }}
-            />
+            <div className="position-relative">
+              <img
+                src="./assets/images/1.jpg"
+                alt="Rith"
+                className="rounded-circle shadow"
+                style={{
+                  width: "clamp(84px, 18vw, 120px)",
+                  height: "clamp(84px, 18vw, 120px)",
+                  objectFit: "cover",
+                  border: "4px solid #fff",
+                  boxShadow: nightMode
+                    ? "0 4px 20px rgba(127, 83, 255, 0.4)"
+                    : "0 4px 20px rgba(255, 105, 180, 0.3)",
+                }}
+              />
+              <span
+                className="position-absolute bottom-0 end-0 badge rounded-circle p-1"
+                style={{
+                  background: badgeBgRith,
+                  fontSize: "0.85rem",
+                  border: "2px solid #fff",
+                }}
+              >
+                ♂
+              </span>
+            </div>
+
             <div
               style={{
                 color: nameColor,
                 fontFamily: "'Caveat', cursive",
-                fontSize: "2rem",
-                textShadow: "0 2px 8px #fff8",
-                margin: "16px 0 8px 0",
+                fontSize: "clamp(1.5rem, 4vw, 2rem)",
                 fontWeight: 700,
+                marginTop: 6,
+                lineHeight: 1.1,
               }}
             >
               Rith
             </div>
-            <div className="d-flex gap-2 mb-3">
+
+            {/* Badges */}
+            <div className="d-flex flex-wrap gap-1 justify-content-center my-1">
               <span
-                className="badge rounded-pill px-3 py-2"
+                className="badge rounded-pill px-2 py-1"
                 style={{
                   background: badgeBgRith,
                   color: badgeColor,
-                  fontSize: 18,
-                  letterSpacing: 1,
+                  fontSize: "clamp(0.72rem, 2vw, 0.85rem)",
+                  fontWeight: 600,
                 }}
               >
-                ♂ {rithAge}
+                {rithAge} yrs
               </span>
               <span
-                className="badge rounded-pill px-3 py-2"
+                className="badge rounded-pill px-2 py-1"
                 style={{
                   background: zodiacBg,
                   color: badgeColor,
-                  fontSize: 18,
-                  letterSpacing: 1,
+                  fontSize: "clamp(0.72rem, 2vw, 0.85rem)",
+                  fontWeight: 600,
                 }}
               >
                 {rithZodiac.symbol} {rithZodiac.name}
               </span>
             </div>
-            {/* Single line text below image */}
+
             <div
-              style={singleLineTextStyle}
-              data-aos="fade-right"
-              data-aos-delay="300"
+              style={{
+                color: bubbleColor,
+                fontFamily: "'Caveat', cursive",
+                fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
+                fontWeight: 600,
+                opacity: 0.9,
+              }}
             >
-              Rith Ft Ry
+              Rith Ft Ry 💙
             </div>
           </div>
-          {/* Center Live Counter */}
+
+          {/* Center Counter (Desktop Middle / Mobile Order 3 or center) */}
           <div
-            className="col-12 col-md-4 d-flex flex-column align-items-center justify-content-center py-4"
+            className="col-12 col-md-4 d-flex flex-column align-items-center justify-content-center py-2 order-3 order-md-2"
             data-aos="zoom-in"
-            data-aos-delay="250"
+            data-aos-delay="200"
           >
-            {/* Live Counter */}
+            {/* Beating Heart between lovers */}
+            <div
+              style={{
+                fontSize: "clamp(1.6rem, 4vw, 2.2rem)",
+                animation: "beat 1.3s infinite",
+                marginBottom: 4,
+              }}
+            >
+              💖
+            </div>
+
+            {/* Live Counter Unit Boxes */}
             <div className="d-flex gap-1 align-items-center justify-content-center flex-wrap mb-2">
               {[
                 { label: "Days", value: elapsed.days, pad: false },
@@ -223,25 +252,24 @@ export default function Relationship({ nightMode }) {
                   <div
                     className="text-center"
                     style={{
-                      minWidth: 36,
-                      padding: "4px 3px",
-                      borderRadius: 8,
+                      minWidth: "clamp(42px, 10vw, 54px)",
+                      padding: "6px 4px",
+                      borderRadius: 10,
                       background: nightMode
-                        ? "rgba(127, 83, 255, 0.15)"
-                        : "rgba(255, 105, 180, 0.1)",
+                        ? "rgba(127, 83, 255, 0.22)"
+                        : "rgba(255, 105, 180, 0.12)",
                       border: nightMode
-                        ? "1px solid #7f53ff22"
-                        : "1px solid #ff69b418",
+                        ? "1px solid rgba(127, 83, 255, 0.4)"
+                        : "1px solid rgba(255, 105, 180, 0.25)",
                     }}
                   >
                     <div
                       style={{
-                        fontFamily: "'Poppins', 'Montserrat', sans-serif",
-                        fontSize: "0.95rem",
+                        fontFamily: "'Poppins', sans-serif",
+                        fontSize: "clamp(1rem, 3vw, 1.25rem)",
                         fontWeight: 800,
                         color: nightMode ? "#e8deff" : "#5a2d4a",
                         lineHeight: 1.1,
-                        letterSpacing: "0.3px",
                       }}
                     >
                       {unit.pad ? String(unit.value).padStart(2, "0") : unit.value}
@@ -249,12 +277,12 @@ export default function Relationship({ nightMode }) {
                     <div
                       style={{
                         fontFamily: "'Poppins', sans-serif",
-                        fontSize: "0.45rem",
-                        fontWeight: 600,
+                        fontSize: "0.55rem",
+                        fontWeight: 700,
                         color: heartColor,
                         letterSpacing: "0.8px",
                         textTransform: "uppercase",
-                        marginTop: 1,
+                        marginTop: 2,
                       }}
                     >
                       {unit.label}
@@ -263,10 +291,10 @@ export default function Relationship({ nightMode }) {
                   {idx < 3 && (
                     <span
                       style={{
-                        fontSize: "0.75rem",
+                        fontSize: "0.85rem",
                         fontWeight: 800,
-                        color: nightMode ? "#7f53ff55" : "#ffb3d655",
-                        margin: "0 1px",
+                        color: nightMode ? "#7f53ff88" : "#ff69b488",
+                        margin: "0 2px",
                         animation: "colonBlink 1s ease-in-out infinite",
                       }}
                     >
@@ -276,98 +304,106 @@ export default function Relationship({ nightMode }) {
                 </div>
               ))}
             </div>
-            <div className="since-cute" style={{ textAlign: "center" }}>
-              <span className="since-date" style={{ fontWeight: 700 }}>
-                {since}
+
+            {/* Since Date */}
+            <div
+              style={{
+                fontFamily: "'Caveat', cursive",
+                fontSize: "1.05rem",
+                fontWeight: 600,
+                color: nightMode ? "#d6ccff" : "#8a508f",
+              }}
+            >
+              Together since {since} 💕
+            </div>
+          </div>
+
+          {/* Mary Profile */}
+          <div
+            className="col-6 col-md-4 d-flex flex-column align-items-center text-center order-2 order-md-3"
+            data-aos="fade-up"
+            data-aos-delay="150"
+          >
+            <div className="position-relative">
+              <img
+                src="./assets/images/2.jpg"
+                alt="Mary"
+                className="rounded-circle shadow"
+                style={{
+                  width: "clamp(84px, 18vw, 120px)",
+                  height: "clamp(84px, 18vw, 120px)",
+                  objectFit: "cover",
+                  border: "4px solid #fff",
+                  boxShadow: nightMode
+                    ? "0 4px 20px rgba(127, 83, 255, 0.4)"
+                    : "0 4px 20px rgba(255, 105, 180, 0.3)",
+                }}
+              />
+              <span
+                className="position-absolute bottom-0 end-0 badge rounded-circle p-1"
+                style={{
+                  background: badgeBgMary,
+                  fontSize: "0.85rem",
+                  border: "2px solid #fff",
+                }}
+              >
+                ♀
               </span>
             </div>
-            <div style={{ fontSize: "1.8rem", marginTop: 4 }}>🧑‍🤝‍🧑</div>
-          </div>
-          {/* Mary */}
-          <div
-            className="col-12 col-md-4 d-flex flex-column align-items-center px-3 py-3"
-            data-aos="fade-up"
-            data-aos-delay="170"
-          >
-            <img
-              src="./assets/images/2.jpg"
-              alt="Mary"
-              className="rounded-circle shadow"
-              style={{
-                width: 120,
-                height: 120,
-                objectFit: "cover",
-                border: "6px solid #fff",
-                background: "#fff",
-                boxShadow: shadow,
-              }}
-            />
+
             <div
               style={{
                 color: nameColor,
                 fontFamily: "'Caveat', cursive",
-                fontSize: "2rem",
-                textShadow: "0 2px 8px #fff8",
-                margin: "16px 0 8px 0",
+                fontSize: "clamp(1.5rem, 4vw, 2rem)",
                 fontWeight: 700,
+                marginTop: 6,
+                lineHeight: 1.1,
               }}
             >
               Mary
             </div>
-            <div className="d-flex gap-2 mb-3">
+
+            {/* Badges */}
+            <div className="d-flex flex-wrap gap-1 justify-content-center my-1">
               <span
-                className="badge rounded-pill px-3 py-2"
+                className="badge rounded-pill px-2 py-1"
                 style={{
                   background: badgeBgMary,
                   color: badgeColor,
-                  fontSize: 18,
-                  letterSpacing: 1,
+                  fontSize: "clamp(0.72rem, 2vw, 0.85rem)",
+                  fontWeight: 600,
                 }}
               >
-                ♀ {maryAge}
+                {maryAge} yrs
               </span>
               <span
-                className="badge rounded-pill px-3 py-2"
+                className="badge rounded-pill px-2 py-1"
                 style={{
                   background: zodiacBg,
                   color: badgeColor,
-                  fontSize: 18,
-                  letterSpacing: 1,
+                  fontSize: "clamp(0.72rem, 2vw, 0.85rem)",
+                  fontWeight: 600,
                 }}
               >
                 {maryZodiac.symbol} {maryZodiac.name}
               </span>
             </div>
-            {/* Single line text below image */}
+
             <div
-              style={singleLineTextStyle}
-              data-aos="fade-left"
-              data-aos-delay="350"
+              style={{
+                color: bubbleColor,
+                fontFamily: "'Caveat', cursive",
+                fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
+                fontWeight: 600,
+                opacity: 0.9,
+              }}
             >
-              Ry Ft Rith
+              Ry Ft Rith 💗
             </div>
           </div>
         </div>
       </div>
-      {/* Google Fonts link (optional if not in index.html) */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Caveat:wght@700&display=swap"
-        rel="stylesheet"
-      />
-      {/* Heart Beat Animation */}
-      <style>{`
-        @keyframes beat {
-          0%, 100% { transform: scale(1);}
-          20% { transform: scale(1.12);}
-          40% { transform: scale(0.96);}
-          60% { transform: scale(1.10);}
-          80% { transform: scale(0.97);}
-        }
-        @keyframes colonBlink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-      `}</style>
     </div>
   );
 }

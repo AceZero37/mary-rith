@@ -150,7 +150,7 @@ const LoveQuotes = ({ nightMode }) => {
           border: cardBorder,
           boxShadow: cardShadow,
           backdropFilter: "blur(12px)",
-          padding: "36px 32px 28px",
+          padding: "clamp(22px, 5vw, 36px) clamp(16px, 4vw, 32px) 24px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
