@@ -71,22 +71,13 @@ export default function Relationship({ nightMode }) {
   const rithZodiac = getZodiac(rithBirth);
   const maryZodiac = getZodiac(maryBirth);
 
-  // Theme tokens
-  const ringGrad = nightMode
-    ? "linear-gradient(135deg, #7f53ff 0%, #ff69b4 40%, #ffd700 70%, #a77dfd 100%)"
-    : "linear-gradient(135deg, #ff69b4 0%, #ff8cb3 30%, #ffd700 60%, #a77dfd 100%)";
-
-  const maryRingGrad = nightMode
-    ? "linear-gradient(135deg, #ff69b4 0%, #ffd700 50%, #7f53ff 100%)"
-    : "linear-gradient(135deg, #ffd700 0%, #ff69b4 50%, #a77dfd 100%)";
-
   const heroBg = nightMode
-    ? `radial-gradient(ellipse at 50% 0%, rgba(127,83,255,0.5) 0%, transparent 60%),
-       radial-gradient(ellipse at 85% 85%, rgba(255,105,180,0.25) 0%, transparent 50%),
-       rgba(16, 8, 40, 0.78)`
-    : `radial-gradient(ellipse at 50% 0%, rgba(255,182,218,0.6) 0%, transparent 60%),
-       radial-gradient(ellipse at 85% 90%, rgba(255,220,240,0.45) 0%, transparent 55%),
-       rgba(255, 240, 252, 0.82)`;
+    ? `radial-gradient(ellipse at 50% 0%, rgba(127,83,255,0.45) 0%, transparent 60%),
+       radial-gradient(ellipse at 85% 85%, rgba(255,105,180,0.2) 0%, transparent 50%),
+       rgba(18, 10, 44, 0.94)`
+    : `radial-gradient(ellipse at 50% 0%, rgba(255,182,218,0.55) 0%, transparent 60%),
+       radial-gradient(ellipse at 85% 90%, rgba(255,220,240,0.4) 0%, transparent 55%),
+       rgba(255, 245, 252, 0.94)`;
 
   const subColor  = nightMode ? "#d6aaff" : "#d72660";
   const badgeBg   = nightMode ? "rgba(127,83,255,0.32)" : "rgba(255,105,180,0.18)";
@@ -100,7 +91,7 @@ export default function Relationship({ nightMode }) {
 
   return (
     <div style={{ width: "100%", padding: "0 0 28px 0" }}>
-      {/* ── Hero Card ── */}
+      {/* ── Outer Wrapper with Animated Rainbow Border around Box ── */}
       <div
         style={{
           width: "100%",
@@ -110,236 +101,366 @@ export default function Relationship({ nightMode }) {
         }}
         data-aos="fade-up"
       >
+        {/* Animated Rainbow Border Wrapper */}
         <div
+          className="rainbow-box-container"
           style={{
-            borderRadius: "clamp(20px, 4vw, 32px)",
-            overflow: "hidden",
             position: "relative",
-            background: heroBg,
-            backdropFilter: "blur(20px)",
-            border: nightMode
-              ? "1.5px solid rgba(167,125,253,0.28)"
-              : "1.5px solid rgba(255,182,218,0.55)",
+            borderRadius: "clamp(22px, 4.2vw, 34px)",
+            padding: "2.5px", // Thickness of Rainbow Border
+            overflow: "hidden",
             boxShadow: nightMode
-              ? "0 24px 70px rgba(127,83,255,0.4), 0 4px 24px rgba(0,0,0,0.45)"
-              : "0 24px 70px rgba(255,105,180,0.28), 0 4px 24px rgba(255,182,218,0.2)",
-            padding: "clamp(28px, 5vw, 52px) clamp(16px, 4vw, 48px)",
+              ? "0 24px 70px rgba(127,83,255,0.45), 0 0 30px rgba(255,105,180,0.35)"
+              : "0 24px 70px rgba(255,105,180,0.35), 0 0 30px rgba(255,182,218,0.45)",
           }}
         >
-          {/* Bokeh blobs */}
-          <div style={{ position: "absolute", top: -80, left: "20%", width: 280, height: 280, borderRadius: "50%", background: nightMode ? "rgba(127,83,255,0.16)" : "rgba(255,182,218,0.25)", filter: "blur(65px)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", top: -50, right: "15%", width: 200, height: 200, borderRadius: "50%", background: nightMode ? "rgba(255,105,180,0.12)" : "rgba(255,210,235,0.32)", filter: "blur(50px)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: -60, left: "40%", width: 240, height: 240, borderRadius: "50%", background: nightMode ? "rgba(127,83,255,0.1)" : "rgba(255,230,245,0.3)", filter: "blur(60px)", pointerEvents: "none" }} />
+          {/* 360° Rotating Rainbow Conic Gradient for the entire Box */}
+          <div
+            className="rainbow-spin-box"
+            style={{
+              position: "absolute",
+              top: "-100%",
+              left: "-100%",
+              width: "300%",
+              height: "300%",
+              background: "conic-gradient(from 0deg, #ff007f, #ff7f00, #ffd700, #00ff88, #00d2ff, #7f53ff, #ff007f)",
+              animation: "rainbowSpin 6s linear infinite",
+              pointerEvents: "none",
+            }}
+          />
 
-          {/* ── TITLE ── */}
-          <div className="text-center mb-4 position-relative" data-aos="fade-down">
-            <div style={{
-              fontFamily: "'Caveat', cursive",
-              fontSize: "clamp(2rem, 6.5vw, 3.2rem)",
-              fontWeight: 700,
-              color: nightMode ? "#fff" : "#d72660",
-              textShadow: nightMode
-                ? "0 2px 28px rgba(207,174,255,0.75)"
-                : "0 2px 20px rgba(255,105,180,0.45)",
-              letterSpacing: "0.5px",
-              lineHeight: 1.1,
-            }}>
-              Our Love Story ✨
-            </div>
-            <div style={{
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 600,
-              fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
-              color: nightMode ? "rgba(207,174,255,0.7)" : "rgba(215,38,96,0.58)",
-              letterSpacing: "clamp(1px, 0.5vw, 2.5px)",
-              textTransform: "uppercase",
-              marginTop: 6,
-            }}>
-              Sovan Narith &amp; Mary · Since Aug 20, 2026
-            </div>
-          </div>
-
-          {/* ── PROFILES ROW ── */}
+          {/* ── Inner Card ── */}
           <div
             style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "center",
-              gap: 0,
               position: "relative",
-              marginBottom: 32,
+              borderRadius: "clamp(20px, 4vw, 32px)",
+              overflow: "hidden",
+              background: heroBg,
+              backdropFilter: "blur(24px)",
+              padding: "clamp(28px, 5vw, 52px) clamp(16px, 4vw, 48px)",
+              zIndex: 2,
             }}
-            data-aos="zoom-in"
-            data-aos-delay="100"
           >
-            {/* RITH */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 2, flex: "0 0 auto" }}>
+            {/* Bokeh blobs */}
+            <div style={{ position: "absolute", top: -80, left: "20%", width: 280, height: 280, borderRadius: "50%", background: nightMode ? "rgba(127,83,255,0.16)" : "rgba(255,182,218,0.25)", filter: "blur(65px)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", top: -50, right: "15%", width: 200, height: 200, borderRadius: "50%", background: nightMode ? "rgba(255,105,180,0.12)" : "rgba(255,210,235,0.32)", filter: "blur(50px)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", bottom: -60, left: "40%", width: 240, height: 240, borderRadius: "50%", background: nightMode ? "rgba(127,83,255,0.1)" : "rgba(255,230,245,0.3)", filter: "blur(60px)", pointerEvents: "none" }} />
+
+            {/* ── TITLE ── */}
+            <div className="text-center mb-4 position-relative" data-aos="fade-down">
               <div style={{
-                padding: 4,
-                borderRadius: "50%",
-                background: ringGrad,
-                boxShadow: nightMode
-                  ? "0 0 32px rgba(127,83,255,0.75), 0 0 65px rgba(255,105,180,0.35)"
-                  : "0 0 32px rgba(255,105,180,0.65), 0 0 60px rgba(255,182,218,0.45)",
-                animation: "ringPulse 3s ease-in-out infinite",
+                fontFamily: "'Caveat', cursive",
+                fontSize: "clamp(2rem, 6.5vw, 3.2rem)",
+                fontWeight: 700,
+                color: nightMode ? "#fff" : "#d72660",
+                textShadow: nightMode
+                  ? "0 2px 28px rgba(207,174,255,0.75)"
+                  : "0 2px 20px rgba(255,105,180,0.45)",
+                letterSpacing: "0.5px",
+                lineHeight: 1.1,
               }}>
-                <div style={{ padding: 3, borderRadius: "50%", background: nightMode ? "#0d0622" : "#fff0fa" }}>
-                  <img
-                    src="./assets/images/1.jpg"
-                    alt="Rith"
-                    style={{
-                      width: "clamp(90px, 18vw, 138px)",
-                      height: "clamp(90px, 18vw, 138px)",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
-                  />
-                </div>
+                Our Love Story ✨
               </div>
-              <div style={{ marginTop: 10, textAlign: "center" }}>
-                <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(1.4rem, 4vw, 1.9rem)", fontWeight: 700, color: subColor }}>Rith</div>
-                <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap", marginTop: 4 }}>
-                  <span style={{ background: badgeBg, color: badgeClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{rithAge} yrs</span>
-                  <span style={{ background: zodiacBg, color: zodiacClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{rithZodiac.symbol} {rithZodiac.name}</span>
-                </div>
-                <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(0.85rem, 2vw, 1rem)", color: nightMode ? "#bca6e8" : "#9b6882", marginTop: 3 }}>Rith Ft Ry 💙</div>
+              <div style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 600,
+                fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+                color: nightMode ? "rgba(207,174,255,0.7)" : "rgba(215,38,96,0.58)",
+                letterSpacing: "clamp(1px, 0.5vw, 2.5px)",
+                textTransform: "uppercase",
+                marginTop: 6,
+              }}>
+                Sovan Narith &amp; Mary · Since Aug 20, 2026
               </div>
             </div>
 
-            {/* CENTER HEART */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 10, margin: "0 clamp(-14px, -3vw, -22px)", marginBottom: 52 }}>
-              <div style={{
-                width: "clamp(50px, 11vw, 72px)",
-                height: "clamp(50px, 11vw, 72px)",
-                borderRadius: "50%",
-                background: ringGrad,
+            {/* ── PROFILES ROW ── */}
+            <div
+              style={{
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-end",
                 justifyContent: "center",
-                fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
-                boxShadow: nightMode
-                  ? "0 0 32px rgba(127,83,255,0.85), 0 0 14px rgba(255,105,180,0.4)"
-                  : "0 0 32px rgba(255,105,180,0.75), 0 0 14px rgba(255,215,0,0.3)",
-                animation: "beat 1.4s ease-in-out infinite",
-                border: nightMode ? "3px solid rgba(207,174,255,0.28)" : "3px solid rgba(255,255,255,0.85)",
-              }}>❤️</div>
-            </div>
-
-            {/* MARY */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 2, flex: "0 0 auto" }}>
-              <div style={{
-                padding: 4,
-                borderRadius: "50%",
-                background: maryRingGrad,
-                boxShadow: nightMode
-                  ? "0 0 32px rgba(255,105,180,0.65), 0 0 65px rgba(255,215,0,0.3)"
-                  : "0 0 32px rgba(255,215,0,0.55), 0 0 60px rgba(255,105,180,0.4)",
-                animation: "ringPulse 3s ease-in-out infinite",
-                animationDelay: "0.5s",
-              }}>
-                <div style={{ padding: 3, borderRadius: "50%", background: nightMode ? "#0d0622" : "#fff0fa" }}>
-                  <img
-                    src="./assets/images/2.jpg"
-                    alt="Mary"
+                gap: 0,
+                position: "relative",
+                marginBottom: 32,
+              }}
+              data-aos="zoom-in"
+              data-aos-delay="100"
+            >
+              {/* RITH */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 2, flex: "0 0 auto" }}>
+                {/* Spinning Rainbow Ring Container */}
+                <div
+                  className="rainbow-avatar-wrapper"
+                  style={{
+                    position: "relative",
+                    width: "clamp(98px, 20vw, 148px)",
+                    height: "clamp(98px, 20vw, 148px)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    boxShadow: nightMode
+                      ? "0 0 35px rgba(127,83,255,0.8), 0 0 70px rgba(255,105,180,0.4)"
+                      : "0 0 35px rgba(255,105,180,0.7), 0 0 65px rgba(255,182,218,0.5)",
+                  }}
+                >
+                  {/* 360° Spinning Rainbow Gradient */}
+                  <div
+                    className="rainbow-spin-layer"
                     style={{
-                      width: "clamp(90px, 18vw, 138px)",
-                      height: "clamp(90px, 18vw, 138px)",
+                      position: "absolute",
+                      inset: "-60%",
+                      background: "conic-gradient(from 0deg, #ff007f, #ff7f00, #ffd700, #00ff88, #00d2ff, #7f53ff, #ff007f)",
                       borderRadius: "50%",
-                      objectFit: "cover",
-                      display: "block",
+                      animation: "rainbowSpin 3.5s linear infinite",
                     }}
                   />
+
+                  {/* Inner Mask with Photo */}
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "calc(100% - 8px)",
+                      height: "calc(100% - 8px)",
+                      borderRadius: "50%",
+                      background: nightMode ? "#0d0622" : "#fff0fa",
+                      padding: 3,
+                      zIndex: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <img
+                      src="./assets/images/1.jpg"
+                      alt="Rith"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ marginTop: 10, textAlign: "center" }}>
+                  <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(1.4rem, 4vw, 1.9rem)", fontWeight: 700, color: subColor }}>Rith</div>
+                  <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap", marginTop: 4 }}>
+                    <span style={{ background: badgeBg, color: badgeClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{rithAge} yrs</span>
+                    <span style={{ background: zodiacBg, color: zodiacClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{rithZodiac.symbol} {rithZodiac.name}</span>
+                  </div>
+                  <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(0.85rem, 2vw, 1rem)", color: nightMode ? "#bca6e8" : "#9b6882", marginTop: 3 }}>Rith Ft Ry 💙</div>
                 </div>
               </div>
-              <div style={{ marginTop: 10, textAlign: "center" }}>
-                <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(1.4rem, 4vw, 1.9rem)", fontWeight: 700, color: subColor }}>Mary</div>
-                <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap", marginTop: 4 }}>
-                  <span style={{ background: badgeBg, color: badgeClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{maryAge} yrs</span>
-                  <span style={{ background: zodiacBg, color: zodiacClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{maryZodiac.symbol} {maryZodiac.name}</span>
+
+              {/* CENTER HEART WITH SPINNING RAINBOW HALO */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 10, margin: "0 clamp(-14px, -3vw, -22px)", marginBottom: 52 }}>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "clamp(54px, 12vw, 76px)",
+                    height: "clamp(54px, 12vw, 76px)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    boxShadow: nightMode
+                      ? "0 0 35px rgba(255,105,180,0.85), 0 0 16px rgba(127,83,255,0.6)"
+                      : "0 0 35px rgba(255,105,180,0.8), 0 0 16px rgba(255,215,0,0.4)",
+                    animation: "beat 1.4s ease-in-out infinite",
+                  }}
+                >
+                  {/* Rotating rainbow for heart */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: "-60%",
+                      background: "conic-gradient(from 180deg, #ff007f, #ffd700, #00ff88, #00d2ff, #7f53ff, #ff7f00, #ff007f)",
+                      borderRadius: "50%",
+                      animation: "rainbowSpin 3s linear infinite reverse",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "calc(100% - 6px)",
+                      height: "calc(100% - 6px)",
+                      borderRadius: "50%",
+                      background: nightMode
+                        ? "linear-gradient(135deg, rgba(255,105,180,0.9), rgba(127,83,255,0.9))"
+                        : "linear-gradient(135deg, #ff69b4, #ff8cb3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
+                      zIndex: 2,
+                      border: nightMode ? "2px solid rgba(255,255,255,0.4)" : "2px solid #fff",
+                    }}
+                  >
+                    ❤️
+                  </div>
                 </div>
-                <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(0.85rem, 2vw, 1rem)", color: nightMode ? "#bca6e8" : "#9b6882", marginTop: 3 }}>Ry Ft Rith 💗</div>
+              </div>
+
+              {/* MARY */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 2, flex: "0 0 auto" }}>
+                {/* Spinning Rainbow Ring Container */}
+                <div
+                  className="rainbow-avatar-wrapper"
+                  style={{
+                    position: "relative",
+                    width: "clamp(98px, 20vw, 148px)",
+                    height: "clamp(98px, 20vw, 148px)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    boxShadow: nightMode
+                      ? "0 0 35px rgba(255,105,180,0.8), 0 0 70px rgba(255,215,0,0.4)"
+                      : "0 0 35px rgba(255,215,0,0.7), 0 0 65px rgba(255,105,180,0.5)",
+                  }}
+                >
+                  {/* 360° Spinning Rainbow Gradient (offset start) */}
+                  <div
+                    className="rainbow-spin-layer"
+                    style={{
+                      position: "absolute",
+                      inset: "-60%",
+                      background: "conic-gradient(from 120deg, #ffd700, #ff7f00, #ff007f, #7f53ff, #00d2ff, #00ff88, #ffd700)",
+                      borderRadius: "50%",
+                      animation: "rainbowSpin 3.5s linear infinite",
+                    }}
+                  />
+
+                  {/* Inner Mask with Photo */}
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "calc(100% - 8px)",
+                      height: "calc(100% - 8px)",
+                      borderRadius: "50%",
+                      background: nightMode ? "#0d0622" : "#fff0fa",
+                      padding: 3,
+                      zIndex: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <img
+                      src="./assets/images/2.jpg"
+                      alt="Mary"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ marginTop: 10, textAlign: "center" }}>
+                  <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(1.4rem, 4vw, 1.9rem)", fontWeight: 700, color: subColor }}>Mary</div>
+                  <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap", marginTop: 4 }}>
+                    <span style={{ background: badgeBg, color: badgeClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{maryAge} yrs</span>
+                    <span style={{ background: zodiacBg, color: zodiacClr, borderRadius: 20, padding: "2px 10px", fontSize: "clamp(0.62rem, 1.5vw, 0.73rem)", fontWeight: 700, fontFamily: "'Poppins', sans-serif" }}>{maryZodiac.symbol} {maryZodiac.name}</span>
+                  </div>
+                  <div style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(0.85rem, 2vw, 1rem)", color: nightMode ? "#bca6e8" : "#9b6882", marginTop: 3 }}>Ry Ft Rith 💗</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* ── COUNTDOWN ── */}
-          <div
-            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(6px, 2vw, 14px)", flexWrap: "wrap" }}
-            data-aos="fade-up"
-            data-aos-delay="150"
-          >
-            {[
-              { label: "DAYS",  value: elapsed.days,    pad: false },
-              { label: "HRS",   value: elapsed.hours,   pad: true  },
-              { label: "MIN",   value: elapsed.minutes, pad: true  },
-              { label: "SEC",   value: elapsed.seconds, pad: true  },
-            ].map((unit, idx) => (
-              <div key={unit.label} style={{ display: "flex", alignItems: "center", gap: "clamp(6px, 1.5vw, 12px)" }}>
-                <div style={{
-                  minWidth: "clamp(64px, 16vw, 96px)",
-                  padding: "clamp(10px, 2.5vw, 16px) clamp(8px, 2vw, 12px)",
-                  borderRadius: "clamp(14px, 3vw, 20px)",
-                  background: timerCardBg,
-                  border: timerBorder,
-                  backdropFilter: "blur(12px)",
-                  textAlign: "center",
-                  boxShadow: nightMode
-                    ? "0 6px 24px rgba(127,83,255,0.28), inset 0 1px 0 rgba(255,255,255,0.07)"
-                    : "0 6px 24px rgba(255,105,180,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
-                }}>
+            {/* ── COUNTDOWN ── */}
+            <div
+              style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "clamp(6px, 2vw, 14px)", flexWrap: "wrap" }}
+              data-aos="fade-up"
+              data-aos-delay="150"
+            >
+              {[
+                { label: "DAYS",  value: elapsed.days,    pad: false },
+                { label: "HRS",   value: elapsed.hours,   pad: true  },
+                { label: "MIN",   value: elapsed.minutes, pad: true  },
+                { label: "SEC",   value: elapsed.seconds, pad: true  },
+              ].map((unit, idx) => (
+                <div key={unit.label} style={{ display: "flex", alignItems: "center", gap: "clamp(6px, 1.5vw, 12px)" }}>
                   <div style={{
-                    fontFamily: "'Poppins', sans-serif",
-                    fontWeight: 800,
-                    fontSize: "clamp(1.4rem, 5vw, 2.1rem)",
-                    color: timerNum,
-                    lineHeight: 1.1,
-                    letterSpacing: "1px",
+                    minWidth: "clamp(64px, 16vw, 96px)",
+                    padding: "clamp(10px, 2.5vw, 16px) clamp(8px, 2vw, 12px)",
+                    borderRadius: "clamp(14px, 3vw, 20px)",
+                    background: timerCardBg,
+                    border: timerBorder,
+                    backdropFilter: "blur(12px)",
+                    textAlign: "center",
+                    boxShadow: nightMode
+                      ? "0 6px 24px rgba(127,83,255,0.28), inset 0 1px 0 rgba(255,255,255,0.07)"
+                      : "0 6px 24px rgba(255,105,180,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
                   }}>
-                    {unit.pad ? String(unit.value).padStart(2, "0") : unit.value}
+                    <div style={{
+                      fontFamily: "'Poppins', sans-serif",
+                      fontWeight: 800,
+                      fontSize: "clamp(1.4rem, 5vw, 2.1rem)",
+                      color: timerNum,
+                      lineHeight: 1.1,
+                      letterSpacing: "1px",
+                    }}>
+                      {unit.pad ? String(unit.value).padStart(2, "0") : unit.value}
+                    </div>
+                    <div style={{
+                      fontFamily: "'Poppins', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "clamp(0.52rem, 1.4vw, 0.65rem)",
+                      color: timerLbl,
+                      letterSpacing: "1.8px",
+                      marginTop: 4,
+                    }}>
+                      {unit.label}
+                    </div>
                   </div>
-                  <div style={{
-                    fontFamily: "'Poppins', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "clamp(0.52rem, 1.4vw, 0.65rem)",
-                    color: timerLbl,
-                    letterSpacing: "1.8px",
-                    marginTop: 4,
-                  }}>
-                    {unit.label}
-                  </div>
+                  {idx < 3 && (
+                    <span style={{
+                      fontWeight: 900,
+                      fontSize: "clamp(1rem, 3vw, 1.5rem)",
+                      color: nightMode ? "rgba(207,174,255,0.45)" : "rgba(255,105,180,0.4)",
+                      animation: "colonBlink 1s ease-in-out infinite",
+                      lineHeight: 1,
+                    }}>:</span>
+                  )}
                 </div>
-                {idx < 3 && (
-                  <span style={{
-                    fontWeight: 900,
-                    fontSize: "clamp(1rem, 3vw, 1.5rem)",
-                    color: nightMode ? "rgba(207,174,255,0.45)" : "rgba(255,105,180,0.4)",
-                    animation: "colonBlink 1s ease-in-out infinite",
-                    lineHeight: 1,
-                  }}>:</span>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* Together since */}
-          <div className="text-center mt-3" data-aos="fade-up" data-aos-delay="200">
-            <span style={{
-              fontFamily: "'Caveat', cursive",
-              fontSize: "clamp(1.05rem, 2.8vw, 1.3rem)",
-              fontWeight: 700,
-              color: nightMode ? "rgba(207,174,255,0.8)" : "rgba(215,38,96,0.72)",
-            }}>
-              Together since {since} 💕
-            </span>
+            {/* Together since */}
+            <div className="text-center mt-3" data-aos="fade-up" data-aos-delay="200">
+              <span style={{
+                fontFamily: "'Caveat', cursive",
+                fontSize: "clamp(1.05rem, 2.8vw, 1.3rem)",
+                fontWeight: 700,
+                color: nightMode ? "rgba(207,174,255,0.8)" : "rgba(215,38,96,0.72)",
+              }}>
+                Together since {since} 💕
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Keyframe Animations */}
       <style>{`
-        @keyframes ringPulse {
-          0%, 100% { filter: brightness(1); }
-          50% { filter: brightness(1.18) saturate(1.2); }
+        @keyframes rainbowSpin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
         @keyframes beat {
           0%, 100% { transform: scale(1); }
