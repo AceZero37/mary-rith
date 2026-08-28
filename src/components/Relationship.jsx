@@ -79,15 +79,15 @@ export default function Relationship({ nightMode }) {
        radial-gradient(ellipse at 85% 90%, rgba(255,220,240,0.4) 0%, transparent 55%),
        rgba(255, 245, 252, 0.94)`;
 
-  const subColor  = nightMode ? "#d6aaff" : "#d72660";
-  const badgeBg   = nightMode ? "rgba(127,83,255,0.32)" : "rgba(255,105,180,0.18)";
-  const badgeClr  = nightMode ? "#cfaeff" : "#d72660";
-  const zodiacBg  = nightMode ? "rgba(127,83,255,0.42)" : "rgba(100,160,255,0.28)";
+  const subColor = nightMode ? "#d6aaff" : "#d72660";
+  const badgeBg = nightMode ? "rgba(127,83,255,0.32)" : "rgba(255,105,180,0.18)";
+  const badgeClr = nightMode ? "#cfaeff" : "#d72660";
+  const zodiacBg = nightMode ? "rgba(127,83,255,0.42)" : "rgba(100,160,255,0.28)";
   const zodiacClr = nightMode ? "#e0d0ff" : "#3a4a70";
   const timerCardBg = nightMode ? "rgba(127,83,255,0.16)" : "rgba(255,105,180,0.1)";
   const timerBorder = nightMode ? "1.5px solid rgba(167,125,253,0.38)" : "1.5px solid rgba(255,105,180,0.28)";
-  const timerNum  = nightMode ? "#f0e8ff" : "#5a1a4a";
-  const timerLbl  = nightMode ? "#cfaeff" : "#d72660";
+  const timerNum = nightMode ? "#f0e8ff" : "#5a1a4a";
+  const timerLbl = nightMode ? "#cfaeff" : "#d72660";
 
   return (
     <div style={{ width: "100%", padding: "0 0 28px 0" }}>
@@ -232,7 +232,7 @@ export default function Relationship({ nightMode }) {
                   }}
                 >
                   <img
-                    src="./assets/images/1.jpg"
+                    src="./assets/images/35.jpg"
                     alt="Rith"
                     style={{
                       width: "100%",
@@ -457,10 +457,10 @@ export default function Relationship({ nightMode }) {
               data-aos-delay="150"
             >
               {[
-                { label: "DAYS",  value: elapsed.days,    pad: false },
-                { label: "HRS",   value: elapsed.hours,   pad: true  },
-                { label: "MIN",   value: elapsed.minutes, pad: true  },
-                { label: "SEC",   value: elapsed.seconds, pad: true  },
+                { label: "DAYS", value: elapsed.days, pad: false },
+                { label: "HRS", value: elapsed.hours, pad: true },
+                { label: "MIN", value: elapsed.minutes, pad: true },
+                { label: "SEC", value: elapsed.seconds, pad: true },
               ].map((unit, idx) => (
                 <div key={unit.label} style={{ display: "flex", alignItems: "center", gap: "clamp(6px, 1.5vw, 12px)" }}>
                   <div style={{

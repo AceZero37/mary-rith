@@ -32,7 +32,6 @@
 }
 
 /* --- Footer --- */
-/* Footer gradient line */
 .footer-gradient-line {
   width: 100%;
   height: 4px;
@@ -42,7 +41,6 @@
   opacity: 0.45;
 }
 
-/* Footer container styles */
 .footer {
   background: rgba(255, 255, 255, 0.93);
   border-top: 1.5px solid #ffd6e6;
@@ -51,7 +49,6 @@
   z-index: 10;
 }
 
-/* Couple names font/accent */
 .footer-couple {
   font-family: 'Quicksand', cursive, sans-serif;
   letter-spacing: 1px;
@@ -70,19 +67,9 @@
 }
 
 @keyframes footerHeartBeat {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  30% {
-    transform: scale(1.25);
-  }
-
-  60% {
-    transform: scale(0.95);
-  }
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.25); }
+  60% { transform: scale(0.95); }
 }
 
 .footer-copyright {
@@ -91,7 +78,6 @@
   font-family: 'Poppins', sans-serif;
   opacity: 0.85;
 }
-
 
 /* --- Relationship Main Card --- */
 .relationship-main-card {
@@ -119,7 +105,6 @@
     margin: 12px auto 20px auto;
   }
 }
-
 
 html,
 body {
@@ -167,17 +152,10 @@ body {
   100% { filter: hue-rotate(-15deg) brightness(0.95); }
 }
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 @keyframes floatHeart {
   from {
     transform: translateY(100vh) rotate(0deg);
   }
-
   to {
     transform: translateY(-30vh) rotate(360deg);
   }
@@ -200,118 +178,44 @@ body {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-/* Floating hearts positions and animation timing */
-.h1 {
-  left: 10%;
-  animation-duration: 26s;
-  animation-delay: 0s;
-  font-size: 2.3rem;
-}
+.h1 { left: 10%; animation-duration: 26s; animation-delay: 0s; font-size: 2.3rem; }
+.h2 { left: 22%; animation-duration: 32s; animation-delay: 3s; font-size: 2rem; }
+.h3 { left: 45%; animation-duration: 28s; animation-delay: 7s; font-size: 2.7rem; }
+.h4 { left: 63%; animation-duration: 35s; animation-delay: 6s; font-size: 2.2rem; }
+.h5 { left: 78%; animation-duration: 27s; animation-delay: 5s; font-size: 2.8rem; }
+.h6 { left: 88%; animation-duration: 31s; animation-delay: 2s; font-size: 3.1rem; }
 
-.h2 {
-  left: 22%;
-  animation-duration: 32s;
-  animation-delay: 3s;
-  font-size: 2rem;
-}
-
-.h3 {
-  left: 45%;
-  animation-duration: 28s;
-  animation-delay: 7s;
-  font-size: 2.7rem;
-}
-
-.h4 {
-  left: 63%;
-  animation-duration: 35s;
-  animation-delay: 6s;
-  font-size: 2.2rem;
-}
-
-.h5 {
-  left: 78%;
-  animation-duration: 27s;
-  animation-delay: 5s;
-  font-size: 2.8rem;
-}
-
-.h6 {
-  left: 88%;
-  animation-duration: 31s;
-  animation-delay: 2s;
-  font-size: 3.1rem;
-}
-
-/* Night mode floating icons — cosmic purple glow */
 .night .floating-bg-heart {
   background-color: rgba(127, 83, 255, 0.22);
   box-shadow: 0 0 16px 6px rgba(127, 83, 255, 0.45);
   color: #cfaeff;
 }
 
-/* Light mode floating icons — soft pink bokeh glow */
 .light .floating-bg-heart {
   background-color: rgba(255, 182, 218, 0.35);
   box-shadow: 0 0 16px 6px rgba(255, 105, 180, 0.35);
   color: #ff69b4;
 }
 
-/* Star twinkle animation */
 @keyframes starTwinkle {
-  0% {
-    opacity: 0.4;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-/* Music button styling - Updated to match new light mode theme */
-.btn-outline-pink {
-  color: #00b894;
-  border-color: #00b894;
-  transition: all 0.3s ease;
-}
-
-.btn-outline-pink:hover,
-.btn-outline-pink:focus {
-  background-color: #00b894;
-  color: white;
-  border-color: #00b894;
-  box-shadow: 0 4px 20px rgba(0, 184, 148, 0.4);
-}
-
-.music-toggle.btn-outline-primary {
-  color: #b993ff;
-  border-color: #b993ff;
-  transition: all 0.3s ease;
-}
-
-.music-toggle.btn-outline-primary:hover,
-.music-toggle.btn-outline-primary:focus {
-  background-color: #b993ff;
-  color: white;
-  border-color: #b993ff;
-  box-shadow: 0 4px 20px #b993ffaa;
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
 }
 
 /* ======================================================
-   3D POLAROID WALL & STICKY NOTES STYLES
+   3D POLAROID WALL & FLIP STYLES
    ====================================================== */
-.polaroid-card-wrapper {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+.polaroid-3d-scene {
+  user-select: none;
 }
 
-.polaroid-card-wrapper:hover {
-  transform: translateY(-8px) scale(1.03);
+.polaroid-3d-scene:hover {
+  z-index: 15;
 }
 
 .washi-tape {
   backdrop-filter: blur(2px);
-  opacity: 0.9;
-  border-radius: 2px;
+  opacity: 0.92;
 }
 
 /* Custom smooth scrollbar for polaroid back note */
@@ -329,13 +233,13 @@ body {
   border-radius: 4px;
 }
 
-.polaroid-back div::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 105, 180, 0.6);
-}
-
-/* Sticky notes hover animation */
-.sticky-note-card {
-  user-select: none;
+/* ======================================================
+   FEED CARD DOUBLE TAP POP HEART
+   ====================================================== */
+@keyframes popHeart {
+  0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.4) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(15deg); opacity: 0; }
 }
 
 /* ======================================================
@@ -351,11 +255,6 @@ body {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

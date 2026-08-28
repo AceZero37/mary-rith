@@ -55,11 +55,12 @@ function App() {
   }, []);
 
   const [nightMode, setNightMode] = useState(false);
+  const [currentTemplate, setCurrentTemplate] = useState("all");
 
   // Add class for mode to root container
   const modeClass = nightMode ? "night" : "light";
 
-  // Remove inline background styles — use CSS classes instead
+  // Background styles CSS classes
   const bgClass = nightMode ? "bg-night" : "bg-light";
 
   // Ambient floating icons — light = pink bokeh, night = cosmic
@@ -118,10 +119,19 @@ function App() {
 
       {/* MAIN CONTENT */}
       <div style={{ position: "relative", zIndex: 2 }}>
-        {/* Sticky Header */}
-        <Header nightMode={nightMode} setNightMode={setNightMode} />
+        {/* Sticky Header with Template Switcher */}
+        <Header
+          nightMode={nightMode}
+          setNightMode={setNightMode}
+          currentTemplate={currentTemplate}
+          setCurrentTemplate={setCurrentTemplate}
+        />
         <div style={{ paddingTop: 8 }}>
-          <Content nightMode={nightMode} />
+          <Content
+            nightMode={nightMode}
+            currentTemplate={currentTemplate}
+            setCurrentTemplate={setCurrentTemplate}
+          />
           <Footer nightMode={nightMode} />
         </div>
       </div>

@@ -2,14 +2,14 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import AOS from "aos";
 
-// ---- DATA ----
-const videos = [
+// ---- ALL 15 VIDEOS DATA ----
+const allVideos = [
   {
     id: 1,
     title: "Sweet Moments",
     subtitle: "Every smile with you is priceless 💕",
     emoji: "🌸",
-    src: "../assets/video/1.mp4",
+    src: "./assets/video/1.mp4",
     tag: "Romantic",
     tagColor: "#ff69b4",
   },
@@ -18,7 +18,7 @@ const videos = [
     title: "Together Forever",
     subtitle: "Side by side, always and always ✨",
     emoji: "💑",
-    src: "../assets/video/2.mp4",
+    src: "./assets/video/2.mp4",
     tag: "Memories",
     tagColor: "#a77dfd",
   },
@@ -27,8 +27,8 @@ const videos = [
     title: "Our Adventure",
     subtitle: "The road is better with you 🚗",
     emoji: "🌍",
-    src: "../assets/video/3.mp4",
-    tag: "Adventures",
+    src: "./assets/video/3.mp4",
+    tag: "Adventure",
     tagColor: "#ffd700",
   },
   {
@@ -36,7 +36,7 @@ const videos = [
     title: "Love Story",
     subtitle: "Our chapter is my favorite story 📖",
     emoji: "❤️",
-    src: "../assets/video/4.mp4",
+    src: "./assets/video/4.mp4",
     tag: "Romantic",
     tagColor: "#ff4b72",
   },
@@ -45,7 +45,7 @@ const videos = [
     title: "Precious Time",
     subtitle: "Time flies when I'm holding your hand ⏰",
     emoji: "💖",
-    src: "../assets/video/5.mp4",
+    src: "./assets/video/5.mp4",
     tag: "Cozy",
     tagColor: "#00b894",
   },
@@ -54,32 +54,131 @@ const videos = [
     title: "Dancing Time",
     subtitle: "Dancing like nobody's watching, just us 🎶",
     emoji: "💃",
-    src: "../assets/video/6.mp4",
-    tag: "Fun",
+    src: "./assets/video/6.mp4",
+    tag: "Dancing",
     tagColor: "#74b9ff",
   },
   {
     id: 7,
-    title: "Sleeping Time",
-    subtitle: "Sleeping Together 😴",
+    title: "Sleeping Together",
+    subtitle: "Peaceful dreams in your warm embrace 😴",
     emoji: "😴",
-    src: "../assets/video/7.mp4",
-    tag: "Fun",
+    src: "./assets/video/7.mp4",
+    tag: "Cozy",
     tagColor: "#10ac84",
+  },
+  {
+    id: 8,
+    title: "Sweet Laughter",
+    subtitle: "You make my whole world laugh out loud 😂",
+    emoji: "🥰",
+    src: "./assets/video/8.mp4",
+    tag: "Fun",
+    tagColor: "#fd79a8",
+  },
+  {
+    id: 9,
+    title: "Magical Night",
+    subtitle: "Under the city lights, holding you close 🌃",
+    emoji: "✨",
+    src: "./assets/video/9.mp4",
+    tag: "Memories",
+    tagColor: "#6c5ce7",
+  },
+  {
+    id: 10,
+    title: "Romantic Drive",
+    subtitle: "Golden hour breeze and you by my side 🌅",
+    emoji: "🚗",
+    src: "./assets/video/10.mp4",
+    tag: "Adventure",
+    tagColor: "#e17055",
+  },
+  {
+    id: 11,
+    title: "Cute Moments",
+    subtitle: "Every little silly thing you do melts my heart 🍬",
+    emoji: "🎀",
+    src: "./assets/video/11.mp4",
+    tag: "Fun",
+    tagColor: "#00cec9",
+  },
+  {
+    id: 12,
+    title: "Late Night Talks",
+    subtitle: "Whispering our dreams until the stars fade 🌙",
+    emoji: "🌌",
+    src: "./assets/video/12.mp4",
+    tag: "Romantic",
+    tagColor: "#9b59b6",
+  },
+  {
+    id: 13,
+    title: "Happy Vibes",
+    subtitle: "Pure joy and sunshine whenever we are together ☀️",
+    emoji: "🌻",
+    src: "./assets/video/13.mp4",
+    tag: "Fun",
+    tagColor: "#f39c12",
+  },
+  {
+    id: 14,
+    title: "Special Journey",
+    subtitle: "Every milestone with you is a treasure 🏆",
+    emoji: "💍",
+    src: "./assets/video/14.mp4",
+    tag: "Milestones",
+    tagColor: "#e84393",
+  },
+  {
+    id: 15,
+    title: "Forever & Always",
+    subtitle: "My heart belongs to you for all eternity 🔐",
+    emoji: "💫",
+    src: "./assets/video/15.mp4",
+    tag: "Romantic",
+    tagColor: "#ff7675",
+  },
+  {
+    id: 16,
+    title: "Our Sweet Heaven",
+    subtitle: "With you, every day feels like heaven on earth ☁️💖",
+    emoji: "🕊️",
+    src: "./assets/video/16.mp4",
+    tag: "Romantic",
+    tagColor: "#ff70a6",
   },
 ];
 
-// ---- MAIN COMPONENT ----
+const categories = [
+  { id: "all", label: "🎬 All Reels (16)" },
+  { id: "Romantic", label: "💖 Romantic" },
+  { id: "Memories", label: "✨ Memories" },
+  { id: "Adventure", label: "🚗 Adventure" },
+  { id: "Cozy", label: "☕ Cozy" },
+  { id: "Fun", label: "🎉 Fun" },
+  { id: "Dancing", label: "💃 Dancing" },
+  { id: "Milestones", label: "💍 Milestones" },
+];
+
 const Video = ({ nightMode }) => {
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
 
+  const [activeCategory, setActiveCategory] = useState("all");
   const [viewerIdx, setViewerIdx] = useState(null);
   const [hoveredIdx, setHoveredIdx] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef(null);
   const hoverVideoRefs = useRef({});
+
+  // Filtered video list
+  const filteredVideos =
+    activeCategory === "all"
+      ? allVideos
+      : allVideos.filter((v) => v.tag.toLowerCase() === activeCategory.toLowerCase());
 
   // Lock body scroll when modal open
   useEffect(() => {
@@ -100,24 +199,39 @@ const Video = ({ nightMode }) => {
   useEffect(() => {
     if (viewerIdx === null) return;
     const handleKey = (e) => {
-      if (e.key === "ArrowRight" && viewerIdx < videos.length - 1)
+      if (e.key === "ArrowRight" && viewerIdx < filteredVideos.length - 1)
         setViewerIdx((idx) => idx + 1);
       if (e.key === "ArrowLeft" && viewerIdx > 0)
         setViewerIdx((idx) => idx - 1);
       if (e.key === "Escape") setViewerIdx(null);
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePlayPause();
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [viewerIdx]);
+  }, [viewerIdx, filteredVideos.length]);
 
   // Auto-play when opening or switching videos
   useEffect(() => {
     if (viewerIdx !== null && videoRef.current) {
       videoRef.current.load();
-      videoRef.current.play().catch(() => { });
+      videoRef.current.play().catch(() => {});
       setIsPlaying(true);
     }
   }, [viewerIdx]);
+
+  const togglePlayPause = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
 
   // Auto-preview on card hover
   const handleCardMouseEnter = (idx) => {
@@ -125,7 +239,7 @@ const Video = ({ nightMode }) => {
     const vRef = hoverVideoRefs.current[idx];
     if (vRef) {
       vRef.currentTime = 0;
-      vRef.play().catch(() => { });
+      vRef.play().catch(() => {});
     }
   };
 
@@ -138,7 +252,7 @@ const Video = ({ nightMode }) => {
     }
   };
 
-  // Theme
+  // Theme styling
   const accent = nightMode ? "#cfaeff" : "#ff69b4";
   const sectionBg = nightMode
     ? "linear-gradient(180deg, rgba(20,12,45,0) 0%, rgba(40,25,80,0.15) 100%)"
@@ -161,7 +275,7 @@ const Video = ({ nightMode }) => {
     >
       <div className="container px-2">
         {/* ---- Section Header ---- */}
-        <div className="text-center mb-4" style={{ marginTop: 28 }}>
+        <div className="text-center mb-3" style={{ marginTop: 28 }}>
           <div
             style={{
               display: "inline-flex",
@@ -169,7 +283,7 @@ const Video = ({ nightMode }) => {
               gap: 10,
               fontFamily: "'Poppins', 'Montserrat', sans-serif",
               fontWeight: 800,
-              fontSize: "clamp(1.1rem, 3.5vw, 1.35rem)",
+              fontSize: "clamp(1.15rem, 3.8vw, 1.4rem)",
               letterSpacing: "1px",
               color: accent,
               textShadow: nightMode
@@ -178,35 +292,74 @@ const Video = ({ nightMode }) => {
             }}
           >
             <span style={{ fontSize: "1.4rem" }}>🎬</span>
-            Our Video Memories
+            Our Video Memories (16 Reels)
             <span style={{ fontSize: "1.4rem" }}>🎬</span>
           </div>
           <div
             style={{
               fontFamily: "'Caveat', cursive",
-              fontSize: "clamp(1rem, 2.8vw, 1.18rem)",
+              fontSize: "clamp(1rem, 2.8vw, 1.22rem)",
               color: nightMode ? "#d6ccff" : "#b0406a",
               marginTop: 4,
-              opacity: 0.85,
+              opacity: 0.9,
             }}
           >
-            ✨ Hover to preview • Tap to play full screen 💕
+            ✨ Hover over any reel to preview • Tap to play with sound in theater mode 💕
           </div>
         </div>
 
-        {/* ---- Glassmorphism Video Grid ---- */}
-        <div className="row g-3 justify-content-center">
-          {videos.map((video, idx) => {
+        {/* ---- Category Filter Pills ---- */}
+        <div className="d-flex justify-content-center flex-wrap gap-2 mb-4">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setActiveCategory(cat.id);
+                  setViewerIdx(null);
+                }}
+                className="btn btn-sm rounded-pill px-3 py-1 shadow-sm"
+                style={{
+                  background: isActive
+                    ? nightMode
+                      ? "linear-gradient(135deg, #7f53ff 0%, #a77dfd 100%)"
+                      : "linear-gradient(135deg, #ff69b4 0%, #ff8cb3 100%)"
+                    : nightMode
+                    ? "rgba(127, 83, 255, 0.12)"
+                    : "rgba(255, 255, 255, 0.75)",
+                  color: isActive ? "#fff" : textColor,
+                  border: isActive
+                    ? "none"
+                    : nightMode
+                    ? "1px solid rgba(167, 125, 253, 0.3)"
+                    : "1px solid #ffd6e6",
+                  fontWeight: 600,
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "clamp(0.72rem, 2vw, 0.82rem)",
+                  transition: "all 0.2s ease",
+                  cursor: "pointer",
+                }}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ---- Glassmorphism Video Grid (All 15 Videos) ---- */}
+        <div className="row g-3 justify-content-center mx-auto" style={{ maxWidth: 1100 }}>
+          {filteredVideos.map((video, idx) => {
             const isHovered = hoveredIdx === idx;
             return (
               <div
                 key={video.id}
-                className="col-6 col-md-4 col-lg-4"
+                className="col-6 col-md-4 col-lg-3"
                 data-aos="fade-up"
-                data-aos-delay={idx * 70}
+                data-aos-delay={(idx % 4) * 60}
               >
                 <div
-                  className="video-reel-card position-relative overflow-hidden"
+                  className="video-reel-card position-relative overflow-hidden h-100 d-flex flex-column justify-content-between"
                   style={{
                     borderRadius: 22,
                     background: cardBg,
@@ -235,7 +388,7 @@ const Video = ({ nightMode }) => {
                   <div
                     className="position-relative overflow-hidden"
                     style={{
-                      height: "clamp(130px, 30vw, 200px)",
+                      height: "clamp(140px, 32vw, 210px)",
                       background: "#111",
                     }}
                   >
@@ -274,9 +427,9 @@ const Video = ({ nightMode }) => {
                     <div
                       className="position-absolute top-0 start-0 m-2 px-2 py-0.5 rounded-pill"
                       style={{
-                        background: video.tagColor + "dd",
+                        background: video.tagColor + "ee",
                         color: "#fff",
-                        fontSize: "clamp(0.5rem, 1.3vw, 0.65rem)",
+                        fontSize: "clamp(0.52rem, 1.3vw, 0.65rem)",
                         fontWeight: 700,
                         fontFamily: "'Poppins', sans-serif",
                         backdropFilter: "blur(4px)",
@@ -286,17 +439,17 @@ const Video = ({ nightMode }) => {
                       {video.tag}
                     </div>
 
-                    {/* Duration / Reel indicator (top-right) */}
+                    {/* Reel indicator (top-right) */}
                     <div
                       className="position-absolute top-0 end-0 m-2 d-flex align-items-center gap-1"
                       style={{
-                        background: "rgba(0,0,0,0.55)",
+                        background: "rgba(0,0,0,0.6)",
                         borderRadius: 20,
                         padding: "2px 8px",
                         backdropFilter: "blur(4px)",
                       }}
                     >
-                      <span style={{ fontSize: "0.7rem" }}>▶</span>
+                      <span style={{ fontSize: "0.65rem", color: "#ff69b4" }}>▶</span>
                       <span
                         style={{
                           color: "#fff",
@@ -305,7 +458,7 @@ const Video = ({ nightMode }) => {
                           fontWeight: 600,
                         }}
                       >
-                        Reel
+                        #{video.id}
                       </span>
                     </div>
 
@@ -313,12 +466,12 @@ const Video = ({ nightMode }) => {
                     <div
                       className="position-absolute top-50 start-50 translate-middle"
                       style={{
-                        width: "clamp(42px, 10vw, 54px)",
-                        height: "clamp(42px, 10vw, 54px)",
+                        width: "clamp(38px, 9vw, 50px)",
+                        height: "clamp(38px, 9vw, 50px)",
                         borderRadius: "50%",
                         background: isHovered
                           ? video.tagColor + "ee"
-                          : "rgba(255,255,255,0.88)",
+                          : "rgba(255,255,255,0.9)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -330,8 +483,8 @@ const Video = ({ nightMode }) => {
                       }}
                     >
                       <svg
-                        width="18"
-                        height="18"
+                        width="16"
+                        height="16"
                         viewBox="0 0 24 24"
                         fill={isHovered ? "#fff" : video.tagColor}
                         style={{ marginLeft: 2 }}
@@ -346,7 +499,7 @@ const Video = ({ nightMode }) => {
                       style={{
                         bottom: 8,
                         right: 10,
-                        fontSize: "clamp(1rem, 3vw, 1.4rem)",
+                        fontSize: "clamp(1rem, 2.8vw, 1.35rem)",
                         filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
                         transition: "transform 0.25s ease",
                         transform: isHovered ? "scale(1.3) rotate(8deg)" : "scale(1)",
@@ -362,7 +515,7 @@ const Video = ({ nightMode }) => {
                       style={{
                         fontFamily: "'Poppins', sans-serif",
                         fontWeight: 700,
-                        fontSize: "clamp(0.74rem, 2vw, 0.88rem)",
+                        fontSize: "clamp(0.76rem, 2vw, 0.88rem)",
                         color: textColor,
                         lineHeight: 1.15,
                         whiteSpace: "nowrap",
@@ -375,13 +528,13 @@ const Video = ({ nightMode }) => {
                     <div
                       style={{
                         fontFamily: "'Caveat', cursive",
-                        fontSize: "clamp(0.8rem, 2.1vw, 0.95rem)",
+                        fontSize: "clamp(0.82rem, 2.1vw, 0.96rem)",
                         color: subText,
                         lineHeight: 1.2,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        marginTop: 1,
+                        marginTop: 2,
                       }}
                     >
                       {video.subtitle}
@@ -396,6 +549,8 @@ const Video = ({ nightMode }) => {
 
       {/* ---- Fullscreen Video Player Modal (Portal to body) ---- */}
       {viewerIdx !== null &&
+        viewerIdx >= 0 &&
+        viewerIdx < filteredVideos.length &&
         typeof document !== "undefined" &&
         createPortal(
           <div
@@ -419,12 +574,12 @@ const Video = ({ nightMode }) => {
             <div
               style={{
                 width: "100%",
-                maxWidth: 500,
+                maxWidth: 520,
                 padding: "12px 16px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 16,
+                gap: 12,
                 position: "relative",
               }}
               onClick={(e) => e.stopPropagation()}
@@ -461,9 +616,9 @@ const Video = ({ nightMode }) => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 2,
+                  gap: 3,
                   width: "100%",
-                  paddingTop: 8,
+                  paddingTop: 6,
                 }}
               >
                 <div
@@ -475,75 +630,85 @@ const Video = ({ nightMode }) => {
                 >
                   <span
                     style={{
-                      background: videos[viewerIdx].tagColor + "cc",
+                      background: filteredVideos[viewerIdx].tagColor + "cc",
                       color: "#fff",
-                      fontSize: "0.7rem",
+                      fontSize: "0.72rem",
                       fontWeight: 700,
                       fontFamily: "'Poppins', sans-serif",
                       borderRadius: 20,
-                      padding: "2px 10px",
+                      padding: "2px 12px",
                     }}
                   >
-                    {videos[viewerIdx].tag}
+                    {filteredVideos[viewerIdx].tag}
                   </span>
                   <span style={{ fontSize: "1.3rem" }}>
-                    {videos[viewerIdx].emoji}
+                    {filteredVideos[viewerIdx].emoji}
+                  </span>
+                  <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.8rem", fontFamily: "'Poppins', sans-serif" }}>
+                    {viewerIdx + 1} / {filteredVideos.length}
                   </span>
                 </div>
                 <div
                   style={{
                     fontFamily: "'Poppins', sans-serif",
                     fontWeight: 800,
-                    fontSize: "clamp(1rem, 3.5vw, 1.3rem)",
+                    fontSize: "clamp(1.05rem, 3.5vw, 1.35rem)",
                     color: "#fff",
                     textShadow: "0 2px 10px rgba(0,0,0,0.6)",
                     textAlign: "center",
                   }}
                 >
-                  {videos[viewerIdx].title}
+                  {filteredVideos[viewerIdx].title}
                 </div>
                 <div
                   style={{
                     fontFamily: "'Caveat', cursive",
-                    fontSize: "clamp(0.95rem, 2.5vw, 1.12rem)",
-                    color: "rgba(255,220,240,0.9)",
+                    fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
+                    color: "rgba(255,220,240,0.92)",
                     textAlign: "center",
                   }}
                 >
-                  {videos[viewerIdx].subtitle}
+                  {filteredVideos[viewerIdx].subtitle}
                 </div>
               </div>
 
-              {/* Video Player with Gradient Border */}
+              {/* Video Player with Gradient Ambient Border */}
               <div
                 style={{
                   width: "100%",
                   borderRadius: 20,
-                  padding: 2,
-                  background: `linear-gradient(135deg, ${videos[viewerIdx].tagColor}, #fff4, ${videos[viewerIdx].tagColor}88)`,
-                  boxShadow: `0 8px 40px ${videos[viewerIdx].tagColor}55`,
+                  padding: 2.5,
+                  background: `linear-gradient(135deg, ${filteredVideos[viewerIdx].tagColor}, #fff6, ${filteredVideos[viewerIdx].tagColor}88)`,
+                  boxShadow: `0 8px 45px ${filteredVideos[viewerIdx].tagColor}66`,
                 }}
               >
                 <div
                   style={{
-                    borderRadius: 19,
+                    borderRadius: 18,
                     overflow: "hidden",
                     background: "#000",
+                    position: "relative",
                   }}
                 >
                   <video
                     ref={videoRef}
                     key={viewerIdx}
-                    src={videos[viewerIdx].src}
+                    src={filteredVideos[viewerIdx].src}
                     controls
                     autoPlay
                     playsInline
+                    muted={isMuted}
                     style={{
                       width: "100%",
-                      maxHeight: "58vh",
+                      maxHeight: "56vh",
                       objectFit: "contain",
                       display: "block",
                       background: "#000",
+                    }}
+                    onEnded={() => {
+                      if (viewerIdx < filteredVideos.length - 1) {
+                        setViewerIdx((i) => i + 1);
+                      }
                     }}
                   />
                 </div>
@@ -552,7 +717,7 @@ const Video = ({ nightMode }) => {
               {/* Navigation Bar */}
               <div
                 className="d-flex align-items-center justify-content-between w-100"
-                style={{ gap: 12, padding: "0 4px" }}
+                style={{ gap: 10, padding: "0 4px" }}
               >
                 {/* Prev */}
                 <button
@@ -564,8 +729,8 @@ const Video = ({ nightMode }) => {
                     background: "rgba(255,255,255,0.12)",
                     color: "#fff",
                     fontWeight: 700,
-                    fontSize: "1rem",
-                    padding: "8px 18px",
+                    fontSize: "0.9rem",
+                    padding: "8px 16px",
                     cursor: viewerIdx === 0 ? "not-allowed" : "pointer",
                     opacity: viewerIdx === 0 ? 0.3 : 1,
                     backdropFilter: "blur(6px)",
@@ -577,27 +742,28 @@ const Video = ({ nightMode }) => {
                   ← Prev
                 </button>
 
-                {/* Dots */}
-                <div className="d-flex gap-2 align-items-center flex-wrap justify-content-center">
-                  {videos.map((v, i) => (
+                {/* Dots / Thumbnails */}
+                <div className="d-flex gap-1.5 align-items-center flex-wrap justify-content-center" style={{ maxWidth: 280 }}>
+                  {filteredVideos.map((v, i) => (
                     <button
-                      key={i}
+                      key={v.id}
                       onClick={() => setViewerIdx(i)}
+                      title={v.title}
                       style={{
-                        width: i === viewerIdx ? 22 : 10,
-                        height: 10,
+                        width: i === viewerIdx ? 20 : 8,
+                        height: 8,
                         borderRadius: 999,
                         border: "none",
                         background:
                           i === viewerIdx
-                            ? videos[viewerIdx].tagColor
+                            ? filteredVideos[viewerIdx].tagColor
                             : "rgba(255,255,255,0.35)",
                         cursor: "pointer",
                         transition: "all 0.25s ease",
                         padding: 0,
                         boxShadow:
                           i === viewerIdx
-                            ? `0 2px 10px ${videos[viewerIdx].tagColor}88`
+                            ? `0 2px 10px ${filteredVideos[viewerIdx].tagColor}88`
                             : "none",
                       }}
                     />
@@ -607,18 +773,18 @@ const Video = ({ nightMode }) => {
                 {/* Next */}
                 <button
                   onClick={() => setViewerIdx((i) => i + 1)}
-                  disabled={viewerIdx === videos.length - 1}
+                  disabled={viewerIdx === filteredVideos.length - 1}
                   style={{
                     borderRadius: 14,
                     border: "1.5px solid rgba(255,255,255,0.25)",
                     background: "rgba(255,255,255,0.12)",
                     color: "#fff",
                     fontWeight: 700,
-                    fontSize: "1rem",
-                    padding: "8px 18px",
+                    fontSize: "0.9rem",
+                    padding: "8px 16px",
                     cursor:
-                      viewerIdx === videos.length - 1 ? "not-allowed" : "pointer",
-                    opacity: viewerIdx === videos.length - 1 ? 0.3 : 1,
+                      viewerIdx === filteredVideos.length - 1 ? "not-allowed" : "pointer",
+                    opacity: viewerIdx === filteredVideos.length - 1 ? 0.3 : 1,
                     backdropFilter: "blur(6px)",
                     fontFamily: "'Poppins', sans-serif",
                     transition: "all 0.2s ease",

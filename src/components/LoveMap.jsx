@@ -7,7 +7,7 @@ const rithLocation = {
   tag: "His Safe Place 🏡",
   emoji: "💙",
   color: "#7f53ff",
-  avatar: "./assets/images/1.jpg",
+  avatar: "./assets/images/35.jpg",
   mapUrl: "https://maps.app.goo.gl/xEurTTC7545mDJov6?g_st=ic",
 };
 
@@ -122,14 +122,14 @@ export default function LoveMap({ nightMode }) {
                       ? "linear-gradient(135deg, #7f53ff 0%, #a77dfd 100%)"
                       : "linear-gradient(135deg, #ff69b4 0%, #ff8cb3 100%)"
                     : nightMode
-                    ? "rgba(127,83,255,0.14)"
-                    : "rgba(255,105,180,0.12)",
+                      ? "rgba(127,83,255,0.14)"
+                      : "rgba(255,105,180,0.12)",
                   color: isActive ? "#fff" : textColor,
                   border: isActive
                     ? "none"
                     : nightMode
-                    ? "1px solid rgba(167,125,253,0.3)"
-                    : "1px solid rgba(255,182,218,0.4)",
+                      ? "1px solid rgba(167,125,253,0.3)"
+                      : "1px solid rgba(255,182,218,0.4)",
                   borderRadius: 20,
                   padding: "5px clamp(8px, 2vw, 14px)",
                   fontSize: "clamp(0.68rem, 1.8vw, 0.8rem)",
